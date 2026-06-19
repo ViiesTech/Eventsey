@@ -5795,6 +5795,11 @@ react-is@^19.1.0, react-is@^19.2.3:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.2.6.tgz#aeee6159b159eb7f520d672cffcc69e7052d288f"
   integrity sha512-XjBR15BhXuylgWGuslhDKqlSayuqvqBX91BP8pauG8kd1zY8kotkNWbXksTCNRarse4kuGbe2kIY05ARtwNIvw==
 
+react-native-app-intro-slider@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-app-intro-slider/-/react-native-app-intro-slider-4.0.4.tgz#fa5cda7057db62c448ac975ffd2ba0cff94cc8d8"
+  integrity sha512-Zkjaol6X3BbZkHUpVDj2LjdidpS6rCgKi0fx80xgGKa0pHxBRd4swWTv2bHnnvu5k1/HXwYk0mY2TbK+2jHl5w==
+
 react-native-blob-util@^0.24.7:
   version "0.24.9"
   resolved "https://registry.yarnpkg.com/react-native-blob-util/-/react-native-blob-util-0.24.9.tgz#fb5609251d3e3b3b59913bc19ad116e6bfd4e6f8"
@@ -5817,6 +5822,11 @@ react-native-calendars@^1.1314.0:
     xdate "^0.8.0"
   optionalDependencies:
     moment "^2.29.4"
+
+react-native-confirmation-code-field@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-confirmation-code-field/-/react-native-confirmation-code-field-9.0.0.tgz#2009ba5ac9023c8be74198bc2186993c77e00292"
+  integrity sha512-U2/rNPpvsEbRTj/dP3bwjFR5C5tnqOXJ4RE/OCxE13Z0TBYnqkA2WpPYZDqEDPJ/u1Ana7aXLzeOkUoHGEMVZw==
 
 react-native-fast-image@^8.6.3:
   version "8.6.3"

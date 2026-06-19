@@ -15,8 +15,8 @@ const Routes = () => {
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="AuthStack" component={AuthStack} />
-        <Stack.Screen name="GuestStack" component={GuestStack} />
         <Stack.Screen name="MainStack" component={MainStack} />
+        <Stack.Screen name="GuestStack" component={GuestStack} />
       </Stack.Navigator>
     </NavigationContainer>
   );

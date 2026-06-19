@@ -11,20 +11,26 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppImages } from '../assets/Images/Index';
 import { responsiveWidth } from '../utils/Responsive_Dimensions';
+import { AppColors } from '../utils/AppColors';
 
 const ScreenWrapper = ({
   children,
-  backgroundColor = '#000', // Center dabba black hai toh default color black rahega
+  backgroundColor = AppColors.white,
   scrollable = false,
   contentContainerStyle,
 }) => {
   const insets = useSafeAreaInsets();
+  const IOS = Platform.OS === 'ios';
 
   // Padding sirf top/bottom notch aur status bar se content bachane ke liye
   // Horizontal padding 0 hai taaki content corners ke andar tak maze se bleed kare!
   const paddingStyle = {
-    paddingTop: Math.max(insets.top, responsiveWidth(4)),
-    paddingBottom: Math.max(insets.bottom, responsiveWidth(4)),
+    paddingTop: IOS
+      ? responsiveWidth(1)
+      : Math.max(insets.top, responsiveWidth(4)),
+    paddingBottom: IOS
+      ? responsiveWidth(1)
+      : Math.max(insets.bottom, responsiveWidth(4)),
   };
 
   return (
@@ -44,7 +50,11 @@ const ScreenWrapper = ({
           >
             <ScrollView
               style={styles.flexOne}
-              contentContainerStyle={[paddingStyle, contentContainerStyle]}
+              contentContainerStyle={[
+                paddingStyle,
+                styles.contentContainer,
+                contentContainerStyle,
+              ]}
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
             >
@@ -72,10 +82,13 @@ const ScreenWrapper = ({
 const styles = StyleSheet.create({
   mainOuterContainer: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: AppColors.white,
+  },
+  contentContainer: {
+    flexGrow: 1,
   },
   contentLayer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     zIndex: 1, // Content peeche hai lekin isko full width/height mili hui hai
   },
   staticContainer: {
@@ -85,7 +98,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   frameOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'transparent',
     zIndex: 99, // Hamesha content ke upar mask/overlay look dene ke liye
   },

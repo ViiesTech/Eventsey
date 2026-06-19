@@ -5,21 +5,15 @@ const Stack = createStackNavigator();
 
 const UserFlow = () => {
   return (
-    <Stack.Navigator
-      initialRouteName="Splash"
-      screenOptions={{ headerShown: false }}
-    >
-      {/* <Stack.Screen name="Splash" component={SplashScreen} /> */}
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {/* <Stack.Screen name="Splash" component={Splash} /> */}
     </Stack.Navigator>
   );
 };
 const VendorFlow = () => {
   return (
-    <Stack.Navigator
-      initialRouteName="Splash"
-      screenOptions={{ headerShown: false }}
-    >
-      {/* <Stack.Screen name="Splash" component={SplashScreen} /> */}
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {/* <Stack.Screen name="Splash" component={Splash} /> */}
     </Stack.Navigator>
   );
 };
