@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import ScreenWrapper from '../../../components/ScreenWrapper';
 import Button from '../../../components/Button';
 import InputField from '../../../components/InputField';
@@ -19,27 +12,23 @@ import {
 import { showToast } from '../../../components/Toast';
 import { AppColors } from '../../../utils/AppColors';
 
-const ForgotPassword = ({ navigation }) => {
+const ForgotPassword = ({ navigation, route }) => {
   const [email, setEmail] = useState('');
+  const userType = route?.params?.userType;
 
   const handleResetPassword = () => {
     if (!email) {
       return showToast('Validation Error', 'Please enter your email address');
     }
     showToast('Success', 'Otp sent to your email');
-    navigation.navigate('VerifyOTP', { email });
+    navigation.navigate('VerifyOTP', { email, userType });
   };
 
   return (
     <ScreenWrapper scrollable style={styles.screenBackground}>
-      {/* Cloud Scalloped Frame Mask Background */}
-      <ImageBackground
-        source={AppImages.scallopedFrameMask}
-        style={styles.frameWrapper}
-        resizeMode="stretch"
-      >
-        <View style={styles.contentContainer}>
-          {/* Top Logo Section */}
+      <View style={styles.contentContainer}>
+        {/* Top Logo Section */}
+        {userType === 'vendor' && (
           <View style={styles.logoContainer}>
             <View style={styles.logoGlowContainer}>
               <Image
@@ -55,42 +44,42 @@ const ForgotPassword = ({ navigation }) => {
               <Text style={styles.currencySymbol}>$</Text>
             </Text>
           </View>
+        )}
 
-          {/* Back Navigation Arrow */}
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-          >
-            <Image source={AppImages.goBack} style={styles.backIcon} />
-          </TouchableOpacity>
+        {/* Back Navigation Arrow */}
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Image source={AppImages.goBack} style={styles.backIcon} />
+        </TouchableOpacity>
 
-          {/* Screen Title & Instruction Header */}
-          <Text style={styles.headerTitle}>Forgot password</Text>
-          <Text style={styles.subDescription}>
-            Please enter your email to reset the password
-          </Text>
+        {/* Screen Title & Instruction Header */}
+        <Text style={styles.headerTitle}>Forgot password</Text>
+        <Text style={styles.subDescription}>
+          Please enter your email to reset the password
+        </Text>
 
-          {/* Elevated Form Card Container */}
-          <View style={styles.cardContainer}>
-            <Text style={styles.inputLabel}>Your Email</Text>
-            <InputField
-              placeHolder="Enter your email"
-              value={email}
-              handlePress={setEmail}
-              keyboardType="email-address"
-              inputContainerStyle={styles.customInputContainer}
-            />
+        {/* Elevated Form Card Container */}
+        <View style={styles.cardContainer}>
+          <Text style={styles.inputLabel}>Your Email</Text>
+          <InputField
+            placeHolder="Enter your email"
+            value={email}
+            handlePress={setEmail}
+            keyboardType="email-address"
+            inputContainerStyle={styles.customInputContainer}
+          />
 
-            {/* Reset CTA Action */}
-            <Button
-              title="Reset Password"
-              onPress={handleResetPassword}
-              style={styles.resetBtn}
-              textStyle={styles.resetBtnText}
-            />
-          </View>
+          {/* Reset CTA Action */}
+          <Button
+            title="Reset Password"
+            onPress={handleResetPassword}
+            style={styles.resetBtn}
+            textStyle={styles.resetBtnText}
+          />
         </View>
-      </ImageBackground>
+      </View>
     </ScreenWrapper>
   );
 };
@@ -175,7 +164,7 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(3),
   },
   cardContainer: {
-    backgroundColor: '#FFFFFF', // White base block inside scalloped layout
+    backgroundColor: AppColors.white, // White base block inside scalloped layout
     borderRadius: 20,
     padding: responsiveWidth(6),
     width: '100%',

@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import {
   CodeField,
   Cursor,
@@ -52,82 +45,75 @@ const VendorOTP = ({ navigation }) => {
 
   return (
     <ScreenWrapper scrollable style={styles.screenBackground}>
-      {/* Cloud Scalloped Frame Mask Background */}
-      <ImageBackground
-        source={AppImages.scallopedFrameMask}
-        style={styles.frameWrapper}
-        resizeMode="stretch"
-      >
-        <View style={styles.contentContainer}>
-          {/* Header Section */}
-          <View style={styles.logoContainer}>
-            <View style={styles.logoGlowContainer}>
-              <Image
-                source={AppImages.logo}
-                style={styles.logoImage}
-                resizeMode="contain"
-              />
-            </View>
-          </View>
-
-          {/* Title and Back Arrow Navigation Row */}
-          <View style={styles.titleRow}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.backButton}
-            >
-              <Image source={AppIcons.backArrow} style={styles.backIcon} />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Enter code</Text>
-          </View>
-
-          {/* Subtext Description */}
-          <Text style={styles.subDescription}>
-            Enter the 4-digit verification code sent to email
-          </Text>
-
-          {/* Integration of react-native-confirmation-code-field */}
-          <View style={styles.otpInputContainer}>
-            <CodeField
-              ref={ref}
-              {...props}
-              value={value}
-              onChangeText={setValue}
-              cellCount={CELL_COUNT}
-              rootStyle={styles.codeFieldRoot}
-              keyboardType="number-pad"
-              textContentType="oneTimeCode"
-              renderCell={({ index, symbol, isFocused }) => (
-                <Text
-                  key={index}
-                  style={[styles.cell, isFocused && styles.focusCell]}
-                  onLayout={getCellOnLayoutHandler(index)}
-                >
-                  {symbol || (isFocused ? <Cursor /> : null)}
-                </Text>
-              )}
+      <View style={styles.contentContainer}>
+        {/* Header Section */}
+        <View style={styles.logoContainer}>
+          <View style={styles.logoGlowContainer}>
+            <Image
+              source={AppImages.logo}
+              style={styles.logoImage}
+              resizeMode="contain"
             />
           </View>
+        </View>
 
-          {/* Resend Option */}
-          <View style={styles.resendContainer}>
-            <Text style={styles.resendText}>Did not receive code? </Text>
-            <TouchableOpacity
-              onPress={() => showToast('Info', 'OTP Resent successfully')}
-            >
-              <Text style={styles.resendLinkText}>Resend</Text>
-            </TouchableOpacity>
-          </View>
+        {/* Title and Back Arrow Navigation Row */}
+        <View style={styles.titleRow}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}
+          >
+            <Image source={AppIcons.backArrow} style={styles.backIcon} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Enter code</Text>
+        </View>
 
-          {/* Verify Call-to-Action Action Button */}
-          <Button
-            title="Verify"
-            onPress={handleVerify}
-            style={styles.verifyBtn}
-            textStyle={styles.verifyBtnText}
+        {/* Subtext Description */}
+        <Text style={styles.subDescription}>
+          Enter the 4-digit verification code sent to email
+        </Text>
+
+        {/* Integration of react-native-confirmation-code-field */}
+        <View style={styles.otpInputContainer}>
+          <CodeField
+            ref={ref}
+            {...props}
+            value={value}
+            onChangeText={setValue}
+            cellCount={CELL_COUNT}
+            rootStyle={styles.codeFieldRoot}
+            keyboardType="number-pad"
+            textContentType="oneTimeCode"
+            renderCell={({ index, symbol, isFocused }) => (
+              <Text
+                key={index}
+                style={[styles.cell, isFocused && styles.focusCell]}
+                onLayout={getCellOnLayoutHandler(index)}
+              >
+                {symbol || (isFocused ? <Cursor /> : null)}
+              </Text>
+            )}
           />
         </View>
-      </ImageBackground>
+
+        {/* Resend Option */}
+        <View style={styles.resendContainer}>
+          <Text style={styles.resendText}>Did not receive code? </Text>
+          <TouchableOpacity
+            onPress={() => showToast('Info', 'OTP Resent successfully')}
+          >
+            <Text style={styles.resendLinkText}>Resend</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Verify Call-to-Action Action Button */}
+        <Button
+          title="Verify"
+          onPress={handleVerify}
+          style={styles.verifyBtn}
+          textStyle={styles.verifyBtnText}
+        />
+      </View>
     </ScreenWrapper>
   );
 };

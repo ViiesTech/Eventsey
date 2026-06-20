@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import ScreenWrapper from '../../../components/ScreenWrapper';
 import Button from '../../../components/Button';
 import InputField from '../../../components/InputField';
@@ -38,108 +31,101 @@ const VendorSignUp = ({ navigation }) => {
 
   return (
     <ScreenWrapper scrollable style={styles.screenBackground}>
-      {/* Cloud Scalloped Outline Wrapper */}
-      <ImageBackground
-        source={AppImages.scallopedFrameMask}
-        style={styles.frameWrapper}
-        resizeMode="stretch"
-      >
-        <View style={styles.contentContainer}>
-          {/* Header Section */}
-          <View style={styles.logoContainer}>
-            <View style={styles.logoGlowContainer}>
-              <Image
-                source={AppImages.logo}
-                style={styles.logoImage}
-                resizeMode="contain"
-              />
-            </View>
-            <Text style={styles.welcomeText}>Vendors</Text>
-
-            <View style={styles.dividerLine} />
-
-            <Text style={styles.subText}>
-              Grow your business with us{' '}
-              <Text style={styles.currencySymbol}>$</Text>
-            </Text>
-          </View>
-
-          {/* Form Input Fields */}
-          <View style={styles.formContainer}>
-            <InputField
-              placeHolder="email"
-              value={email}
-              handlePress={setEmail}
-              keyboardType="email-address"
-              xmlIcon={AppIcons.emailIcon}
-              inputContainerStyle={styles.customInputContainer}
-            />
-
-            <InputField
-              placeHolder="username"
-              value={username}
-              handlePress={setUsername}
-              xmlIcon={AppIcons.userIcon}
-              inputContainerStyle={styles.customInputContainer}
-            />
-
-            <InputField
-              placeHolder="password"
-              value={password}
-              handlePress={setPassword}
-              security
-              xmlIcon={AppIcons.lockIcon}
-              inputContainerStyle={styles.customInputContainer}
-            />
-
-            <InputField
-              placeHolder="Confirm password"
-              value={confirmPassword}
-              handlePress={setConfirmPassword}
-              security
-              xmlIcon={AppIcons.lockIcon}
-              inputContainerStyle={styles.customInputContainer}
-            />
-
-            {/* Main Sign Up Button */}
-            <Button
-              title="Sign Up"
-              onPress={handleSignUp}
-              style={styles.signUpBtn}
-              textStyle={styles.signUpBtnText}
+      <View style={styles.contentContainer}>
+        {/* Header Section */}
+        <View style={styles.logoContainer}>
+          <View style={styles.logoGlowContainer}>
+            <Image
+              source={AppImages.logo}
+              style={styles.logoImage}
+              resizeMode="contain"
             />
           </View>
+          <Text style={styles.welcomeText}>Vendors</Text>
 
-          {/* "Or continue with" Section */}
-          <View style={styles.socialDividerContainer}>
-            <Text style={styles.socialDividerText}>Or continue with</Text>
-          </View>
+          <View style={styles.dividerLine} />
 
-          {/* Social Buttons */}
-          <View style={styles.socialButtonsRow}>
-            <TouchableOpacity style={styles.socialButton}>
-              <Image source={AppImages.googleLogo} style={styles.socialIcon} />
-              <Text style={styles.socialButtonText}>Google</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.socialButton}>
-              <Image source={AppImages.appleLogo} style={styles.socialIcon} />
-              <Text style={styles.socialButtonText}>Apple</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Footer - Sign In Redirect */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>Already have an account?</Text>
-            <TouchableOpacity
-              style={styles.signInOutlineBtn}
-              onPress={() => navigation.navigate('VendorLogin')}
-            >
-              <Text style={styles.signInBtnText}>Sign in</Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={styles.subText}>
+            Grow your business with us{' '}
+            <Text style={styles.currencySymbol}>$</Text>
+          </Text>
         </View>
-      </ImageBackground>
+
+        {/* Form Input Fields */}
+        <View style={styles.formContainer}>
+          <InputField
+            placeHolder="email"
+            value={email}
+            handlePress={setEmail}
+            keyboardType="email-address"
+            xmlIcon={AppIcons.emailIcon}
+            inputContainerStyle={styles.customInputContainer}
+          />
+
+          <InputField
+            placeHolder="username"
+            value={username}
+            handlePress={setUsername}
+            xmlIcon={AppIcons.userIcon}
+            inputContainerStyle={styles.customInputContainer}
+          />
+
+          <InputField
+            placeHolder="password"
+            value={password}
+            handlePress={setPassword}
+            security
+            xmlIcon={AppIcons.lockIcon}
+            inputContainerStyle={styles.customInputContainer}
+          />
+
+          <InputField
+            placeHolder="Confirm password"
+            value={confirmPassword}
+            handlePress={setConfirmPassword}
+            security
+            xmlIcon={AppIcons.lockIcon}
+            inputContainerStyle={styles.customInputContainer}
+          />
+
+          {/* Main Sign Up Button */}
+          <Button
+            title="Sign Up"
+            onPress={handleSignUp}
+            style={styles.signUpBtn}
+            textStyle={styles.signUpBtnText}
+          />
+        </View>
+
+        {/* "Or continue with" Section */}
+        <View style={styles.socialDividerContainer}>
+          <Text style={styles.socialDividerText}>Or continue with</Text>
+        </View>
+
+        {/* Social Buttons */}
+        <View style={styles.socialButtonsRow}>
+          <TouchableOpacity style={styles.socialButton}>
+            <Image source={AppImages.googleLogo} style={styles.socialIcon} />
+            <Text style={styles.socialButtonText}>Google</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.socialButton}>
+            <Image source={AppImages.appleLogo} style={styles.socialIcon} />
+            <Text style={styles.socialButtonText}>Apple</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Footer - Sign In Redirect */}
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>Already have an account?</Text>
+          <TouchableOpacity
+            style={styles.signInOutlineBtn}
+            onPress={() => navigation.navigate('VendorLogin')}
+          >
+            <Text style={styles.signInBtnText}>Sign in</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </ScreenWrapper>
   );
 };
@@ -272,7 +258,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1,
     borderColor: AppColors.secondary,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: AppColors.white,
     justifyContent: 'center',
     alignItems: 'center',
   },

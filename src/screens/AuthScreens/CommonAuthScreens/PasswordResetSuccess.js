@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import ScreenWrapper from '../../../components/ScreenWrapper';
 import Button from '../../../components/Button';
 import { AppImages } from '../../../assets/Images/Index';
@@ -17,21 +10,18 @@ import {
 } from '../../../utils/Responsive_Dimensions';
 import { AppColors } from '../../../utils/AppColors';
 
-const PasswordResetSuccess = ({ navigation }) => {
+const PasswordResetSuccess = ({ navigation, route }) => {
+  const userType = route?.params?.userType;
+
   const handleContinue = () => {
-    navigation.navigate('NewPassword');
+    navigation.navigate('NewPassword', { userType });
   };
 
   return (
     <ScreenWrapper scrollable style={styles.screenBackground}>
-      {/* Cloud Scalloped Frame Mask Background */}
-      <ImageBackground
-        source={AppImages.scallopedFrameMask}
-        style={styles.frameWrapper}
-        resizeMode="stretch"
-      >
-        <View style={styles.contentContainer}>
-          {/* Top Branding Section */}
+      <View style={styles.contentContainer}>
+        {/* Top Branding Section */}
+        {userType === 'vendor' && (
           <View style={styles.logoContainer}>
             <View style={styles.logoGlowContainer}>
               <Image
@@ -47,34 +37,34 @@ const PasswordResetSuccess = ({ navigation }) => {
               <Text style={styles.currencySymbol}>$</Text>
             </Text>
           </View>
+        )}
 
-          {/* Round Back Navigation Arrow */}
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-          >
-            <Image source={AppImages.goBack} style={styles.backIcon} />
-          </TouchableOpacity>
+        {/* Round Back Navigation Arrow */}
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Image source={AppImages.goBack} style={styles.backIcon} />
+        </TouchableOpacity>
 
-          {/* Title & Screen Subtext Description */}
-          <Text style={styles.headerTitle}>Password reset</Text>
-          <Text style={styles.subDescription}>
-            Your password has been successfully reset. click confirm to set a
-            new password
-          </Text>
+        {/* Title & Screen Subtext Description */}
+        <Text style={styles.headerTitle}>Password reset</Text>
+        <Text style={styles.subDescription}>
+          Your password has been successfully reset. click confirm to set a new
+          password
+        </Text>
 
-          {/* White Card Container Layer */}
-          <View style={styles.cardContainer}>
-            {/* Confirm CTA Action Button */}
-            <Button
-              title="Continue"
-              onPress={handleContinue}
-              style={styles.confirmBtn}
-              textStyle={styles.confirmBtnText}
-            />
-          </View>
+        {/* White Card Container Layer */}
+        <View style={styles.cardContainer}>
+          {/* Confirm CTA Action Button */}
+          <Button
+            title="Continue"
+            onPress={handleContinue}
+            style={styles.confirmBtn}
+            textStyle={styles.confirmBtnText}
+          />
         </View>
-      </ImageBackground>
+      </View>
     </ScreenWrapper>
   );
 };
@@ -159,7 +149,7 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(3),
   },
   cardContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: AppColors.white,
     borderRadius: 20,
     padding: responsiveWidth(6),
     paddingVertical: responsiveHeight(4),

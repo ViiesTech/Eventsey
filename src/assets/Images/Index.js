@@ -10,4 +10,7 @@ export const AppImages = {
   appleLogo: require('./appleLogo.png'),
   successTick: require('./successTick.png'),
   goBack: require('./goBack.png'),
+  heart: require('./heart.png'),
+  calendar: require('./calendar.png'),
+  download: require('./download.png'),
 };

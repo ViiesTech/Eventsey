@@ -12,20 +12,32 @@ import {
 import { showToast } from '../../../components/Toast';
 import { AppColors } from '../../../utils/AppColors';
 
-const UserLogin = ({ navigation }) => {
+const UserSignUp = ({ navigation }) => {
+  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSignIn = () => {
-    if (!email || !password) {
+  const handleSignUp = () => {
+    if (!userName || !email || !password || !confirmPassword) {
       return showToast(
         'Validation Error',
-        'Please enter both email and password',
+        'Please fill in all the required fields',
       );
     }
-    showToast('Success', 'Logging in...');
-    // authentication or dashboard navigation logic goes here
+    if (password !== confirmPassword) {
+      return showToast(
+        'Validation Error',
+        'Password and Confirm Password do not match',
+      );
+    }
+
+    showToast('Success', 'Creating your account...');
+    navigation.navigate('UserOTP', {
+      email,
+    });
   };
 
   const handleSocialSignIn = provider => {
@@ -41,8 +53,17 @@ const UserLogin = ({ navigation }) => {
           <Text style={styles.subTitle}>Eventsey</Text>
         </View>
 
-        {/* Core Login Form Card Component */}
-        <View style={styles.loginCard}>
+        {/* Core SignUp Form Card Component */}
+        <View style={styles.signUpCard}>
+          {/* Username Form Segment */}
+          <Text style={styles.inputLabel}>Username</Text>
+          <InputField
+            placeHolder="Enter your username"
+            value={userName}
+            handlePress={setUserName}
+            inputContainerStyle={styles.customInputContainer}
+          />
+
           {/* Email Form Segment */}
           <Text style={styles.inputLabel}>Email</Text>
           <InputField
@@ -65,22 +86,24 @@ const UserLogin = ({ navigation }) => {
             inputContainerStyle={styles.customInputContainer}
           />
 
-          {/* Forgot Password Link Button */}
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('ForgotPassword', { userType: 'user' })
-            }
-            style={styles.forgotPasswordWrapper}
-          >
-            <Text style={styles.forgotPasswordText}>Forgot password?</Text>
-          </TouchableOpacity>
+          {/* Confirm Password Form Segment */}
+          <Text style={styles.inputLabel}>Confirm Password</Text>
+          <InputField
+            placeHolder="••••••••"
+            value={confirmPassword}
+            handlePress={setConfirmPassword}
+            security
+            showPassword={showConfirmPassword}
+            setShowPassword={setShowConfirmPassword}
+            inputContainerStyle={styles.customInputContainer}
+          />
 
           {/* Authentication Core Button CTA */}
           <Button
-            title="Sign In"
-            onPress={handleSignIn}
-            style={styles.signInBtn}
-            textStyle={styles.signInBtnText}
+            title="Sign Up"
+            onPress={handleSignUp}
+            style={styles.signUpBtn}
+            textStyle={styles.signUpBtnText}
           />
 
           {/* Neutral Section Separator Label */}
@@ -107,19 +130,19 @@ const UserLogin = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          {/* Navigation Account Creation Redirection Link */}
+          {/* Navigation Account Redirection Link */}
           <View style={styles.footerRedirectRow}>
             <Text style={styles.footerRedirectLabel}>
-              Don't have an account?{' '}
+              Already have an account?{' '}
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('UserSignUp')}>
-              <Text style={styles.signUpLink}>Sign up</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('UserLogin')}>
+              <Text style={styles.loginLink}>Log in</Text>
             </TouchableOpacity>
           </View>
 
           {/* Anonymous Mode Option Link */}
           <TouchableOpacity
-            // onPress={() => navigation.navigate('GuestHome')}
+            onPress={() => navigation.navigate('GuestHome')}
             style={styles.guestButtonWrapper}
           >
             <Text style={styles.guestButtonText}>Continue as Guest</Text>
@@ -134,41 +157,35 @@ const styles = StyleSheet.create({
   screenBackground: {
     backgroundColor: AppColors.primary, // Structural layout perimeter background coral tint
   },
-  frameWrapper: {
-    flex: 1,
-    width: '100%',
-    minHeight: responsiveHeight(100),
-  },
   contentContainer: {
     flex: 1,
     paddingHorizontal: responsiveWidth(10),
-    paddingTop: responsiveHeight(13),
+    paddingTop: responsiveHeight(6), // Balanced padding for multi-field alignment
     paddingBottom: responsiveHeight(5),
   },
   brandingContainer: {
     alignItems: 'center',
-    marginBottom: responsiveHeight(3.5),
+    marginBottom: responsiveHeight(3),
   },
   mainTitle: {
     fontSize: responsiveFontSize(3.6),
     fontWeight: '700',
-    color: AppColors.primary, // Heading match tone
+    color: AppColors.primary,
     textAlign: 'center',
     lineHeight: responsiveHeight(5),
   },
   subTitle: {
     fontSize: responsiveFontSize(2.2),
-    color: '#9E9E9E', // Sub-branding structural label gray tint
+    color: '#9E9E9E',
     textAlign: 'center',
     marginTop: responsiveHeight(0.8),
   },
-  loginCard: {
-    backgroundColor: AppColors.white, // Central content structure box layer
+  signUpCard: {
+    backgroundColor: AppColors.white,
     borderRadius: 24,
     paddingHorizontal: responsiveWidth(6),
-    paddingVertical: responsiveHeight(4),
+    paddingVertical: responsiveHeight(3.5),
     width: '100%',
-    // Elevation configuration properties
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
@@ -179,34 +196,26 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.9),
     fontWeight: '600',
     color: '#1A1A1A',
-    marginBottom: responsiveHeight(1),
+    marginBottom: responsiveHeight(0.8),
   },
   customInputContainer: {
-    backgroundColor: '#F5EFEA', // Creamy shaded input container box design theme
+    backgroundColor: '#F5EFEA',
     borderRadius: 14,
     borderWidth: 0,
     height: responsiveHeight(6.2),
-    marginBottom: responsiveHeight(2.2),
+    marginBottom: responsiveHeight(1.8),
     paddingHorizontal: responsiveWidth(4),
   },
-  forgotPasswordWrapper: {
-    alignSelf: 'center',
-    marginBottom: responsiveHeight(2.5),
-    marginTop: responsiveHeight(0.2),
-  },
-  forgotPasswordText: {
-    fontSize: responsiveFontSize(1.8),
-    color: '#BC8D84', // Muted light coral tone link accent
-  },
-  signInBtn: {
-    backgroundColor: AppColors.secondary, // Main verification mint background fill color
+  signUpBtn: {
+    backgroundColor: AppColors.secondary,
     borderRadius: 14,
     height: responsiveHeight(6.2),
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: responsiveHeight(1.2),
     marginBottom: responsiveHeight(3.5),
   },
-  signInBtnText: {
+  signUpBtnText: {
     color: '#1A2E2B',
     fontWeight: '600',
     fontSize: responsiveFontSize(2.2),
@@ -225,7 +234,7 @@ const styles = StyleSheet.create({
   },
   socialButton: {
     flexDirection: 'row',
-    backgroundColor: '#F5EFEA', // Shaded button block context configuration
+    backgroundColor: '#F5EFEA',
     width: '47%',
     height: responsiveHeight(5.8),
     borderRadius: 12,
@@ -253,10 +262,10 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.7),
     color: '#9E9E9E',
   },
-  signUpLink: {
+  loginLink: {
     fontSize: responsiveFontSize(1.7),
     fontWeight: '600',
-    color: AppColors.primary, // Accent brand orange/coral highlight text
+    color: AppColors.primary,
   },
   guestButtonWrapper: {
     alignSelf: 'center',
@@ -265,8 +274,8 @@ const styles = StyleSheet.create({
   guestButtonText: {
     fontSize: responsiveFontSize(1.9),
     fontWeight: '600',
-    color: '#8A6861', // Darker earthy coral secondary text variant
+    color: '#8A6861',
   },
 });
 
-export default UserLogin;
+export default UserSignUp;

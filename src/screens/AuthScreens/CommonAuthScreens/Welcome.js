@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     marginHorizontal: responsiveWidth(10),
+    marginBottom: 30,
   },
 });
 

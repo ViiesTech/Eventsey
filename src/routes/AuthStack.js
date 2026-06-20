@@ -12,6 +12,9 @@ import ForgotPassword from '../screens/AuthScreens/CommonAuthScreens/ForgotPassw
 import VerifyOTP from '../screens/AuthScreens/CommonAuthScreens/VerifyOTP';
 import PasswordResetSuccess from '../screens/AuthScreens/CommonAuthScreens/PasswordResetSuccess';
 import NewPassword from '../screens/AuthScreens/CommonAuthScreens/NewPassword';
+import UserSignUp from '../screens/AuthScreens/UserAuth/UserSignup';
+import UserOTP from '../screens/AuthScreens/UserAuth/UserOTP';
+import CollectInfo from '../screens/AuthScreens/UserAuth/CollectInfo';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +25,16 @@ const UserAuth = () => {
       <Stack.Screen name="Onboarding" component={Onboarding} />
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="UserLogin" component={UserLogin} />
+      <Stack.Screen name="UserSignUp" component={UserSignUp} />
+      <Stack.Screen name="UserOTP" component={UserOTP} />
+      <Stack.Screen name="CollectInfo" component={CollectInfo} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
+      <Stack.Screen
+        name="PasswordResetSuccess"
+        component={PasswordResetSuccess}
+      />
+      <Stack.Screen name="NewPassword" component={NewPassword} />
     </Stack.Navigator>
   );
 };

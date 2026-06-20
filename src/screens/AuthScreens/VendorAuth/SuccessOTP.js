@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import ScreenWrapper from '../../../components/ScreenWrapper';
 import Button from '../../../components/Button';
 import { AppImages } from '../../../assets/Images/Index';
@@ -18,51 +18,41 @@ const SuccessOTP = ({ navigation }) => {
 
   return (
     <ScreenWrapper scrollable style={styles.screenBackground}>
-      {/* Cloud Scalloped Frame Mask Background Wrapper */}
-      <ImageBackground
-        source={AppImages.scallopedFrameMask}
-        style={styles.frameWrapper}
-        resizeMode="stretch"
-      >
-        <View style={styles.contentContainer}>
-          {/* Top Logo & Branding Visual */}
-          <View style={styles.logoContainer}>
-            <View style={styles.logoGlowContainer}>
-              <Image
-                source={AppImages.logo}
-                style={styles.logoImage}
-                resizeMode="contain"
-              />
-            </View>
-          </View>
-
-          {/* Success Message Block */}
-          <View style={styles.messageContainer}>
-            <Text style={styles.successTitle}>Success!</Text>
-            <Text style={styles.successSubtext}>
-              Congratulations! You have been successfully Verified.
-            </Text>
-          </View>
-
-          {/* Center Checkmark Element */}
-          <View style={styles.checkmarkWrapper}>
+      <View style={styles.contentContainer}>
+        {/* Top Logo & Branding Visual */}
+        <View style={styles.logoContainer}>
+          <View style={styles.logoGlowContainer}>
             <Image
-              source={AppImages.successTick}
-              style={styles.checkmarkIcon}
-            />
-          </View>
-
-          {/* Bottom Action Button Area */}
-          <View style={styles.footerContainer}>
-            <Button
-              title="Continue"
-              onPress={handleContinue}
-              style={styles.continueBtn}
-              textStyle={styles.continueBtnText}
+              source={AppImages.logo}
+              style={styles.logoImage}
+              resizeMode="contain"
             />
           </View>
         </View>
-      </ImageBackground>
+
+        {/* Success Message Block */}
+        <View style={styles.messageContainer}>
+          <Text style={styles.successTitle}>Success!</Text>
+          <Text style={styles.successSubtext}>
+            Congratulations! You have been successfully Verified.
+          </Text>
+        </View>
+
+        {/* Center Checkmark Element */}
+        <View style={styles.checkmarkWrapper}>
+          <Image source={AppImages.successTick} style={styles.checkmarkIcon} />
+        </View>
+
+        {/* Bottom Action Button Area */}
+        <View style={styles.footerContainer}>
+          <Button
+            title="Continue"
+            onPress={handleContinue}
+            style={styles.continueBtn}
+            textStyle={styles.continueBtnText}
+          />
+        </View>
+      </View>
     </ScreenWrapper>
   );
 };

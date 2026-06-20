@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import ScreenWrapper from '../../../components/ScreenWrapper';
 import Button from '../../../components/Button';
 import InputField from '../../../components/InputField';
@@ -19,11 +12,12 @@ import {
 import { showToast } from '../../../components/Toast';
 import { AppColors } from '../../../utils/AppColors';
 
-const NewPassword = ({ navigation }) => {
+const NewPassword = ({ navigation, route }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const userType = route?.params?.userType;
 
   const handleUpdatePassword = () => {
     if (!password || !confirmPassword) {
@@ -33,20 +27,18 @@ const NewPassword = ({ navigation }) => {
       return showToast('Validation Error', 'Passwords do not match');
     }
     showToast('Success', 'Password updated successfully');
-    // Success workflow redirection logic
-    navigation.navigate('VendorLogin');
+    if (userType === 'vendor') {
+      navigation.navigate('VendorLogin');
+    } else {
+      navigation.navigate('UserLogin');
+    }
   };
 
   return (
     <ScreenWrapper scrollable style={styles.screenBackground}>
-      {/* Cloud Scalloped Frame Mask Background Wrapper */}
-      <ImageBackground
-        source={AppImages.scallopedFrameMask}
-        style={styles.frameWrapper}
-        resizeMode="stretch"
-      >
-        <View style={styles.contentContainer}>
-          {/* Top Branding Header Layout */}
+      <View style={styles.contentContainer}>
+        {/* Top Branding Header Layout */}
+        {userType === 'vendor' && (
           <View style={styles.logoContainer}>
             <View style={styles.logoGlowContainer}>
               <Image
@@ -62,58 +54,58 @@ const NewPassword = ({ navigation }) => {
               <Text style={styles.currencySymbol}>$</Text>
             </Text>
           </View>
+        )}
 
-          {/* Round Action Back Button */}
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-          >
-            <Image source={AppImages.goBack} style={styles.backIcon} />
-          </TouchableOpacity>
+        {/* Round Action Back Button */}
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Image source={AppImages.goBack} style={styles.backIcon} />
+        </TouchableOpacity>
 
-          {/* Screen Descriptive Headers */}
-          <Text style={styles.headerTitle}>Set a new password</Text>
-          <Text style={styles.subDescription}>
-            Create a new password. Ensure it differs from previous ones for
+        {/* Screen Descriptive Headers */}
+        <Text style={styles.headerTitle}>Set a new password</Text>
+        <Text style={styles.subDescription}>
+          Create a new password. Ensure it differs from previous ones for
+          security
+        </Text>
+
+        {/* Single Elevated Content Card Container */}
+        <View style={styles.cardContainer}>
+          {/* Password input segment */}
+          <Text style={styles.inputLabel}>Password</Text>
+          <InputField
+            placeHolder="Enter your new password"
+            value={password}
+            handlePress={setPassword}
             security
-          </Text>
+            showPassword={showPassword}
+            setShowPassword={setShowPassword}
+            inputContainerStyle={styles.customInputContainer}
+          />
 
-          {/* Single Elevated Content Card Container */}
-          <View style={styles.cardContainer}>
-            {/* Password input segment */}
-            <Text style={styles.inputLabel}>Password</Text>
-            <InputField
-              placeHolder="Enter your new password"
-              value={password}
-              handlePress={setPassword}
-              security
-              showPassword={showPassword}
-              setShowPassword={setShowPassword}
-              inputContainerStyle={styles.customInputContainer}
-            />
+          {/* Confirm password segment */}
+          <Text style={styles.inputLabel}>Confirm Password</Text>
+          <InputField
+            placeHolder="Re-enter password"
+            value={confirmPassword}
+            handlePress={setConfirmPassword}
+            security
+            showPassword={showConfirmPassword}
+            setShowPassword={setShowConfirmPassword}
+            inputContainerStyle={styles.customInputContainer}
+          />
 
-            {/* Confirm password segment */}
-            <Text style={styles.inputLabel}>Confirm Password</Text>
-            <InputField
-              placeHolder="Re-enter password"
-              value={confirmPassword}
-              handlePress={setConfirmPassword}
-              security
-              showPassword={showConfirmPassword}
-              setShowPassword={setShowConfirmPassword}
-              inputContainerStyle={styles.customInputContainer}
-            />
-
-            {/* Update Action Button CTA */}
-            <Button
-              title="Update Password"
-              onPress={handleUpdatePassword}
-              style={styles.updateBtn}
-              textStyle={styles.updateBtnText}
-            />
-          </View>
+          {/* Update Action Button CTA */}
+          <Button
+            title="Update Password"
+            onPress={handleUpdatePassword}
+            style={styles.updateBtn}
+            textStyle={styles.updateBtnText}
+          />
         </View>
-      </ImageBackground>
+      </View>
     </ScreenWrapper>
   );
 };
@@ -198,7 +190,7 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(3),
   },
   cardContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: AppColors.white,
     borderRadius: 20,
     padding: responsiveWidth(6),
     width: '100%',

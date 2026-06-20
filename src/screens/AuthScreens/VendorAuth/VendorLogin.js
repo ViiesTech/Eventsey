@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import ScreenWrapper from '../../../components/ScreenWrapper';
 import Button from '../../../components/Button';
 import InputField from '../../../components/InputField';
@@ -34,87 +27,80 @@ const VendorLogin = ({ navigation }) => {
 
   return (
     <ScreenWrapper scrollable style={styles.screenBackground}>
-      {/* Cloud Scalloped Frame Mask Background */}
-      <ImageBackground
-        source={AppImages.scallopedFrameMask}
-        style={styles.frameWrapper}
-        resizeMode="stretch"
-      >
-        <View style={styles.contentContainer}>
-          {/* Brand Visual & Header */}
-          <View style={styles.logoContainer}>
-            <View style={styles.logoGlowContainer}>
-              <Image
-                source={AppImages.logo}
-                style={styles.logoImage}
-                resizeMode="contain"
-              />
-            </View>
-            <Text style={styles.welcomeText}>Vendors</Text>
-
-            {/* Dark slim divider underneath the header title */}
-            <View style={styles.dividerLine} />
-
-            <Text style={styles.subText}>
-              Grow your business with us{' '}
-              <Text style={styles.currencySymbol}>$</Text>
-            </Text>
-          </View>
-
-          {/* Input Form Fields */}
-          <View style={styles.formContainer}>
-            <InputField
-              label="Email"
-              placeHolder="vendor@example.com"
-              value={email}
-              handlePress={setEmail}
-              keyboardType="email-address"
-              xmlIcon={AppIcons.emailIcon}
-              labelStyle={styles.customLabelStyle}
-              inputContainerStyle={styles.customInputContainer}
-            />
-
-            <InputField
-              label="Password"
-              placeHolder="........"
-              value={password}
-              handlePress={setPassword}
-              security
-              showPassword={showPassword}
-              setShowPassword={setShowPassword}
-              xmlIcon={AppIcons.lockIcon}
-              labelStyle={styles.customLabelStyle}
-              inputContainerStyle={styles.customInputContainer}
-            />
-
-            {/* Forgot Password Link */}
-            <TouchableOpacity
-              onPress={() => navigation.navigate('ForgotPassword')}
-              style={styles.forgotPasswordContainer}
-            >
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-            </TouchableOpacity>
-
-            {/* Login CTA Action */}
-            <Button
-              title="Login"
-              onPress={handleLogin}
-              style={styles.loginBtn}
-              textStyle={styles.loginBtnText}
+      <View style={styles.contentContainer}>
+        {/* Brand Visual & Header */}
+        <View style={styles.logoContainer}>
+          <View style={styles.logoGlowContainer}>
+            <Image
+              source={AppImages.logo}
+              style={styles.logoImage}
+              resizeMode="contain"
             />
           </View>
+          <Text style={styles.welcomeText}>Vendors</Text>
 
-          {/* Footer Registration Link */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>Don't have an account? </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('VendorSignUp')}
-            >
-              <Text style={styles.signUpText}>Sign Up</Text>
-            </TouchableOpacity>
-          </View>
+          {/* Dark slim divider underneath the header title */}
+          <View style={styles.dividerLine} />
+
+          <Text style={styles.subText}>
+            Grow your business with us{' '}
+            <Text style={styles.currencySymbol}>$</Text>
+          </Text>
         </View>
-      </ImageBackground>
+
+        {/* Input Form Fields */}
+        <View style={styles.formContainer}>
+          <InputField
+            label="Email"
+            placeHolder="vendor@example.com"
+            value={email}
+            handlePress={setEmail}
+            keyboardType="email-address"
+            xmlIcon={AppIcons.emailIcon}
+            labelStyle={styles.customLabelStyle}
+            inputContainerStyle={styles.customInputContainer}
+          />
+
+          <InputField
+            label="Password"
+            placeHolder="........"
+            value={password}
+            handlePress={setPassword}
+            security
+            showPassword={showPassword}
+            setShowPassword={setShowPassword}
+            xmlIcon={AppIcons.lockIcon}
+            labelStyle={styles.customLabelStyle}
+            inputContainerStyle={styles.customInputContainer}
+          />
+
+          {/* Forgot Password Link */}
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('ForgotPassword', { userType: 'vendor' })
+            }
+            style={styles.forgotPasswordContainer}
+          >
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
+
+          {/* Login CTA Action */}
+          <Button
+            title="Login"
+            onPress={handleLogin}
+            style={styles.loginBtn}
+            textStyle={styles.loginBtnText}
+          />
+        </View>
+
+        {/* Footer Registration Link */}
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>Don't have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('VendorSignUp')}>
+            <Text style={styles.signUpText}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </ScreenWrapper>
   );
 };
@@ -183,7 +169,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   customInputContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: AppColors.white,
     borderRadius: 14,
     borderWidth: 1,
     borderColor: '#E2E8F0',

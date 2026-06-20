@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import {
   CodeField,
   Cursor,
@@ -28,6 +21,7 @@ const CELL_COUNT = 5; // Design ke mutabiq yahan 5 digits hain
 
 const VerifyOTP = ({ navigation, route }) => {
   const { email } = route.params;
+  const { userType } = route.params;
   const [value, setValue] = useState('');
 
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
@@ -45,19 +39,14 @@ const VerifyOTP = ({ navigation, route }) => {
     }
     showToast('Success', 'Code Verified successfully');
     // On success navigation setup:
-    navigation.navigate('PasswordResetSuccess');
+    navigation.navigate('PasswordResetSuccess', { userType });
   };
 
   return (
     <ScreenWrapper scrollable style={styles.screenBackground}>
-      {/* Cloud Scalloped Frame Mask Background */}
-      <ImageBackground
-        source={AppImages.scallopedFrameMask}
-        style={styles.frameWrapper}
-        resizeMode="stretch"
-      >
-        <View style={styles.contentContainer}>
-          {/* Top Branding Section */}
+      <View style={styles.contentContainer}>
+        {/* Top Branding Section */}
+        {userType === 'vendor' && (
           <View style={styles.logoContainer}>
             <View style={styles.logoGlowContainer}>
               <Image
@@ -73,68 +62,67 @@ const VerifyOTP = ({ navigation, route }) => {
               <Text style={styles.currencySymbol}>$</Text>
             </Text>
           </View>
+        )}
 
-          {/* Round Back Button */}
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-          >
-            <Image source={AppImages.goBack} style={styles.backIcon} />
-          </TouchableOpacity>
+        {/* Round Back Button */}
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Image source={AppImages.goBack} style={styles.backIcon} />
+        </TouchableOpacity>
 
-          {/* Descriptive Content Section */}
-          <Text style={styles.headerTitle}>Check your email</Text>
-          <Text style={styles.subDescription}>
-            We sent a reset link to{' '}
-            <Text style={styles.boldEmail}>{email}</Text> enter 5 digit code
-            that mentioned in the email
-          </Text>
+        {/* Descriptive Content Section */}
+        <Text style={styles.headerTitle}>Check your email</Text>
+        <Text style={styles.subDescription}>
+          We sent a reset link to <Text style={styles.boldEmail}>{email}</Text>{' '}
+          enter 5 digit code that mentioned in the email
+        </Text>
 
-          {/* White Card Layout containing Verification Interface */}
-          <View style={styles.cardContainer}>
-            {/* 5-Digit Field Segment */}
-            <View style={styles.otpInputWrapper}>
-              <CodeField
-                ref={ref}
-                {...props}
-                value={value}
-                onChangeText={setValue}
-                cellCount={CELL_COUNT}
-                rootStyle={styles.codeFieldRoot}
-                keyboardType="number-pad"
-                textContentType="oneTimeCode"
-                renderCell={({ index, symbol, isFocused }) => (
-                  <Text
-                    key={index}
-                    style={[styles.cell, isFocused && styles.focusCell]}
-                    onLayout={getCellOnLayoutHandler(index)}
-                  >
-                    {symbol || (isFocused ? <Cursor /> : null)}
-                  </Text>
-                )}
-              />
-            </View>
-
-            {/* Action CTA Button */}
-            <Button
-              title="Verify Code"
-              onPress={handleVerifyCode}
-              style={styles.verifyBtn}
-              textStyle={styles.verifyBtnText}
+        {/* White Card Layout containing Verification Interface */}
+        <View style={styles.cardContainer}>
+          {/* 5-Digit Field Segment */}
+          <View style={styles.otpInputWrapper}>
+            <CodeField
+              ref={ref}
+              {...props}
+              value={value}
+              onChangeText={setValue}
+              cellCount={CELL_COUNT}
+              rootStyle={styles.codeFieldRoot}
+              keyboardType="number-pad"
+              textContentType="oneTimeCode"
+              renderCell={({ index, symbol, isFocused }) => (
+                <Text
+                  key={index}
+                  style={[styles.cell, isFocused && styles.focusCell]}
+                  onLayout={getCellOnLayoutHandler(index)}
+                >
+                  {symbol || (isFocused ? <Cursor /> : null)}
+                </Text>
+              )}
             />
+          </View>
 
-            {/* Bottom Email Action Row */}
-            <View style={styles.resendContainer}>
-              <Text style={styles.resendText}>Haven't got the email yet? </Text>
-              <TouchableOpacity
-                onPress={() => showToast('Success', 'Code sent!')}
-              >
-                <Text style={styles.resendLinkText}>Resend code</Text>
-              </TouchableOpacity>
-            </View>
+          {/* Action CTA Button */}
+          <Button
+            title="Verify Code"
+            onPress={handleVerifyCode}
+            style={styles.verifyBtn}
+            textStyle={styles.verifyBtnText}
+          />
+
+          {/* Bottom Email Action Row */}
+          <View style={styles.resendContainer}>
+            <Text style={styles.resendText}>Haven't got the email yet? </Text>
+            <TouchableOpacity
+              onPress={() => showToast('Success', 'Code sent!')}
+            >
+              <Text style={styles.resendLinkText}>Resend code</Text>
+            </TouchableOpacity>
           </View>
         </View>
-      </ImageBackground>
+      </View>
     </ScreenWrapper>
   );
 };
@@ -223,7 +211,7 @@ const styles = StyleSheet.create({
     color: '#333333',
   },
   cardContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: AppColors.white,
     borderRadius: 20,
     padding: responsiveWidth(5),
     width: '100%',
@@ -242,7 +230,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cell: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: AppColors.white,
     width: responsiveWidth(12),
     height: responsiveWidth(13.5),
     lineHeight: responsiveWidth(13),
