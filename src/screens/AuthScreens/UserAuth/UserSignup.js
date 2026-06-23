@@ -142,7 +142,7 @@ const UserSignUp = ({ navigation }) => {
 
           {/* Anonymous Mode Option Link */}
           <TouchableOpacity
-            onPress={() => navigation.navigate('GuestHome')}
+            // onPress={() => navigation.navigate('GuestHome')}
             style={styles.guestButtonWrapper}
           >
             <Text style={styles.guestButtonText}>Continue as Guest</Text>

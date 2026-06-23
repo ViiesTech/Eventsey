@@ -25,7 +25,9 @@ const UserLogin = ({ navigation }) => {
       );
     }
     showToast('Success', 'Logging in...');
-    // authentication or dashboard navigation logic goes here
+    setTimeout(() => {
+      navigation.replace('MainStack', { screen: 'UserFlow' });
+    }, 1000);
   };
 
   const handleSocialSignIn = provider => {

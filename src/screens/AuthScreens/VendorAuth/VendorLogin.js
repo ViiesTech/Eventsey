@@ -19,10 +19,13 @@ const VendorLogin = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
-    if (!email) return showToast('Validation Error', 'Please enter your email');
-    if (!password)
-      return showToast('Validation Error', 'Please enter your password');
+    // if (!email) return showToast('Validation Error', 'Please enter your email');
+    // if (!password)
+    //   return showToast('Validation Error', 'Please enter your password');
     showToast('Success', 'Login successful');
+    setTimeout(() => {
+      navigation.replace('MainStack', { screen: 'VendorFlow' });
+    }, 1000);
   };
 
   return (
