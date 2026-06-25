@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatOpacity, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatOpacity,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { AppColors } from '../../utils/AppColors';
 import {
@@ -10,24 +17,46 @@ import {
 
 const initialTasks = [
   { id: 1, title: 'Book Wedding Venue', category: 'Venue', done: true },
-  { id: 2, title: 'Choose Photographer & Videographer', category: 'Media', done: true },
+  {
+    id: 2,
+    title: 'Choose Photographer & Videographer',
+    category: 'Media',
+    done: true,
+  },
   { id: 3, title: 'Finalize Guest List', category: 'Guests', done: false },
   { id: 4, title: 'Select Wedding Dress', category: 'Attire', done: false },
-  { id: 5, title: 'Taste and Choose Catering Menu', category: 'Catering', done: false },
-  { id: 6, title: 'Design and Send Invitations', category: 'Invites', done: false },
-  { id: 7, title: 'Hire Florist & Setup Decor theme', category: 'Decor', done: false },
+  {
+    id: 5,
+    title: 'Taste and Choose Catering Menu',
+    category: 'Catering',
+    done: false,
+  },
+  {
+    id: 6,
+    title: 'Design and Send Invitations',
+    category: 'Invites',
+    done: false,
+  },
+  {
+    id: 7,
+    title: 'Hire Florist & Setup Decor theme',
+    category: 'Decor',
+    done: false,
+  },
 ];
 
 const UserTasks = () => {
   const [tasks, setTasks] = useState(initialTasks);
 
-  const toggleTask = (id) => {
+  const toggleTask = id => {
     setTasks(
-      tasks.map((task) => (task.id === id ? { ...task, done: !task.done } : task))
+      tasks.map(task =>
+        task.id === id ? { ...task, done: !task.done } : task,
+      ),
     );
   };
 
-  const doneCount = tasks.filter((t) => t.done).length;
+  const doneCount = tasks.filter(t => t.done).length;
   const progressPercent = Math.round((doneCount / tasks.length) * 100);
 
   return (
@@ -42,7 +71,9 @@ const UserTasks = () => {
             <Text style={styles.progressPercent}>{progressPercent}%</Text>
           </View>
           <View style={styles.progressBarBg}>
-            <View style={[styles.progressBarFill, { width: `${progressPercent}%` }]} />
+            <View
+              style={[styles.progressBarFill, { width: `${progressPercent}%` }]}
+            />
           </View>
           <Text style={styles.progressSubText}>
             {doneCount} of {tasks.length} tasks completed
@@ -51,7 +82,7 @@ const UserTasks = () => {
 
         {/* Task List */}
         <View style={styles.listContainer}>
-          {tasks.map((task) => (
+          {tasks.map(task => (
             <TouchableOpacity
               key={task.id}
               style={[styles.taskItem, task.done && styles.taskItemDone]}
@@ -59,12 +90,16 @@ const UserTasks = () => {
               onPress={() => toggleTask(task.id)}
             >
               {/* Checkbox circle/square */}
-              <View style={[styles.checkbox, task.done && styles.checkboxChecked]}>
+              <View
+                style={[styles.checkbox, task.done && styles.checkboxChecked]}
+              >
                 {task.done && <Text style={styles.checkmark}>✓</Text>}
               </View>
 
               <View style={styles.taskTextContainer}>
-                <Text style={[styles.taskTitle, task.done && styles.taskTitleDone]}>
+                <Text
+                  style={[styles.taskTitle, task.done && styles.taskTitleDone]}
+                >
                   {task.title}
                 </Text>
                 <Text style={styles.taskCategory}>{task.category}</Text>
@@ -87,7 +122,7 @@ const styles = StyleSheet.create({
   screenHeader: {
     fontSize: responsiveFontSize(2.8),
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
     marginBottom: responsiveHeight(2.5),
   },
   progressCard: {
@@ -177,7 +212,7 @@ const styles = StyleSheet.create({
   taskTitle: {
     fontSize: responsiveFontSize(1.8),
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: AppColors.black,
   },
   taskTitleDone: {
     textDecorationLine: 'line-through',

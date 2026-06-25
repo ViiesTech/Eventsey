@@ -243,7 +243,6 @@ const VendorChat = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   keyboardViewportRootContainer: {
     flex: 1,
-    backgroundColor: 'transparent',
   },
   screenWrapperOverridingStyle: {
     flex: 1,
@@ -264,9 +263,8 @@ const styles = StyleSheet.create({
   navigationHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: '100%',
-    marginTop: responsiveHeight(1),
+    paddingVertical: responsiveHeight(1),
+    paddingRight: responsiveWidth(4),
   },
   backButtonTile: {
     flexDirection: 'row',
@@ -309,7 +307,7 @@ const styles = StyleSheet.create({
   },
   welcomeTitle: {
     fontSize: responsiveFontSize(2),
-    color: '#1A1A1A',
+    color: AppColors.black,
     fontWeight: '500',
     marginTop: responsiveHeight(0.8),
   },
@@ -321,13 +319,13 @@ const styles = StyleSheet.create({
   clientHeaderNameText: {
     fontSize: responsiveFontSize(2.2),
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: AppColors.black,
     marginBottom: responsiveHeight(1.2),
   },
   horizontalDivisionBoundaryLineBreak: {
     width: '100%',
     height: 1,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: AppColors.black,
     opacity: 0.8,
   },
   dialogueListContentScrollAreaContainer: {
@@ -367,7 +365,7 @@ const styles = StyleSheet.create({
     lineHeight: responsiveFontSize(2.2),
   },
   clientTextFontFill: {
-    color: '#1A1A1A',
+    color: AppColors.black,
   },
   vendorTextFontFill: {
     color: '#1A2E2B',
@@ -441,7 +439,7 @@ const styles = StyleSheet.create({
   },
   textInputConsoleFieldInstance: {
     fontSize: responsiveFontSize(1.55),
-    color: '#1A1A1A',
+    color: AppColors.black,
     paddingVertical:
       Platform.OS === 'ios' ? responsiveHeight(0.8) : responsiveHeight(0.4),
     paddingHorizontal: 0,

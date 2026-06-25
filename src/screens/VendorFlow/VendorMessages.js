@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   },
   statusDescriptionText: {
     fontSize: responsiveFontSize(1.6),
-    color: '#1A1A1A',
+    color: AppColors.black,
     marginTop: responsiveHeight(1.5),
     alignSelf: 'flex-start',
   },
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   textInputElementField: {
     flex: 1,
     fontSize: responsiveFontSize(1.6),
-    color: '#1A1A1A',
+    color: AppColors.black,
     padding: 0, // Resets native structural padding overrides inside Android
   },
   threadsListStreamContainer: {

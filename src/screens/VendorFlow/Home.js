@@ -116,25 +116,41 @@ const VendorHome = ({ navigation }) => {
           {/* Quick Action Block */}
           <Text style={styles.blockSectionHeading}>Quick Actions</Text>
           <View style={styles.actionGridContainer}>
-            <TouchableOpacity style={styles.actionGridTile} activeOpacity={0.8}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Jobs')}
+              style={styles.actionGridTile}
+              activeOpacity={0.8}
+            >
               <Image source={AppImages.jobs} style={styles.quickActionsIcon} />
               <Text style={styles.actionTileTextLabel}>Jobs</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionGridTile} activeOpacity={0.8}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Chat')}
+              style={styles.actionGridTile}
+              activeOpacity={0.8}
+            >
               <Image source={AppImages.chat} style={styles.quickActionsIcon} />
               <Text style={styles.actionTileTextLabel}>Messages</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionGridTile} activeOpacity={0.8}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('MyEarnings')}
+              style={styles.actionGridTile}
+              activeOpacity={0.8}
+            >
               <Image
                 source={AppImages.dollar}
                 style={styles.quickActionsIcon}
               />
-              <Text style={styles.actionTileTextLabel}>Payments</Text>
+              <Text style={styles.actionTileTextLabel}>My Earnings</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionGridTile} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={styles.actionGridTile}
+              onPress={() => navigation.navigate('Premium')}
+              activeOpacity={0.8}
+            >
               <Image source={AppImages.star} style={styles.quickActionsIcon} />
               <Text style={styles.actionTileTextLabel}>Premium</Text>
             </TouchableOpacity>

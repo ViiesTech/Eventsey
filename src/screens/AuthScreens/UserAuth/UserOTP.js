@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   cardHeaderTitle: {
     fontSize: responsiveFontSize(2.4),
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
     textAlign: 'center',
     marginBottom: responsiveHeight(1),
   },
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: responsiveFontSize(2.6),
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
   },
   verifyBtn: {
     backgroundColor: AppColors.secondary, // Brand mint signature color fill

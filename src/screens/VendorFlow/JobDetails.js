@@ -203,10 +203,9 @@ const JobDetails = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   contentContainer: {
-    backgroundColor: AppColors.white || '#FFFFFF',
-    marginHorizontal: responsiveWidth(6),
+    backgroundColor: AppColors.white,
+    marginHorizontal: responsiveWidth(9),
     borderRadius: 36,
-    paddingHorizontal: responsiveWidth(5),
     paddingTop: responsiveHeight(2),
     paddingBottom: responsiveHeight(4),
     marginTop: responsiveHeight(2),
@@ -268,7 +267,7 @@ const styles = StyleSheet.create({
   jobCategoryHeadingText: {
     fontSize: responsiveFontSize(2.4),
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
   },
   statusBadgeCapsule: {
     backgroundColor: '#F3A492', // Theme status matching active backdrop tint palette
@@ -320,7 +319,7 @@ const styles = StyleSheet.create({
   blockSectionHeadingTitleText: {
     fontSize: responsiveFontSize(1.8),
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: AppColors.black,
     marginTop: responsiveHeight(1.5),
     marginBottom: responsiveHeight(1.2),
   },
@@ -363,7 +362,7 @@ const styles = StyleSheet.create({
   },
   metaDataActualValueText: {
     fontSize: responsiveFontSize(1.65),
-    color: '#1A1A1A',
+    color: AppColors.black,
     fontWeight: '600',
   },
   mainDescriptionParagraphBodyText: {
@@ -386,7 +385,7 @@ const styles = StyleSheet.create({
   },
   specialNoteLabelWeightSpan: {
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
   },
   footerActionControlsGroupWrapper: {
     marginTop: responsiveHeight(2.5),

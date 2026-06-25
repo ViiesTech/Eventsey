@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+} from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { AppColors } from '../../utils/AppColors';
 import {
@@ -57,7 +64,7 @@ const UserVendors = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredVendors = mockVendors.filter((vendor) => {
+  const filteredVendors = mockVendors.filter(vendor => {
     const matchesCategory =
       selectedCategory === 'All' || vendor.category === selectedCategory;
     const matchesSearch = vendor.name
@@ -89,7 +96,7 @@ const UserVendors = () => {
           style={styles.categoryRow}
           contentContainerStyle={styles.categoryRowContent}
         >
-          {vendorCategories.map((category) => {
+          {vendorCategories.map(category => {
             const isSelected = selectedCategory === category;
             return (
               <TouchableOpacity
@@ -116,7 +123,7 @@ const UserVendors = () => {
         {/* Vendors List */}
         <View style={styles.vendorsList}>
           {filteredVendors.length > 0 ? (
-            filteredVendors.map((vendor) => (
+            filteredVendors.map(vendor => (
               <View key={vendor.id} style={styles.vendorCard}>
                 <View style={styles.vendorHeader}>
                   <View style={styles.vendorNameBlock}>
@@ -161,7 +168,7 @@ const styles = StyleSheet.create({
   screenHeader: {
     fontSize: responsiveFontSize(2.8),
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
     marginBottom: responsiveHeight(2),
   },
   searchWrapper: {
@@ -174,7 +181,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     fontSize: responsiveFontSize(1.7),
-    color: '#1A1A1A',
+    color: AppColors.black,
     padding: 0,
   },
   categoryRow: {
@@ -231,7 +238,7 @@ const styles = StyleSheet.create({
   vendorName: {
     fontSize: responsiveFontSize(2.0),
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
   },
   vendorLocation: {
     fontSize: responsiveFontSize(1.5),
@@ -273,7 +280,7 @@ const styles = StyleSheet.create({
   priceValue: {
     fontSize: responsiveFontSize(1.9),
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
     marginTop: responsiveHeight(0.2),
   },
   contactBtn: {

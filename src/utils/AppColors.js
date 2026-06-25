@@ -5,4 +5,5 @@ export const AppColors = {
   secondary: 'rgba(130, 215, 208, 1)',
   gray: 'rgba(38, 41, 41, 0.5)',
   darkGray: 'rgba(74, 85, 101, 1)',
+  red: 'rgba(231, 0, 11, 1)',
 };

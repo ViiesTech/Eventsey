@@ -38,17 +38,26 @@ const UserProfile = ({ navigation }) => {
         <View style={styles.settingsGroup}>
           <Text style={styles.groupTitle}>Wedding Settings</Text>
 
-          <TouchableOpacity style={styles.settingItem} onPress={() => showToast('Info', 'Editing wedding date...')}>
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={() => showToast('Info', 'Editing wedding date...')}
+          >
             <Text style={styles.settingLabel}>Wedding Date</Text>
             <Text style={styles.settingValue}>Oct 18, 2026</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingItem} onPress={() => showToast('Info', 'Editing theme colors...')}>
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={() => showToast('Info', 'Editing theme colors...')}
+          >
             <Text style={styles.settingLabel}>Theme Colors</Text>
             <Text style={styles.settingValue}>Rose Blush</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingItem} onPress={() => showToast('Info', 'Editing guest password...')}>
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={() => showToast('Info', 'Editing guest password...')}
+          >
             <Text style={styles.settingLabel}>Guest Code</Text>
             <Text style={styles.settingValue}>#LOVE2026</Text>
           </TouchableOpacity>
@@ -57,12 +66,18 @@ const UserProfile = ({ navigation }) => {
         <View style={styles.settingsGroup}>
           <Text style={styles.groupTitle}>Account & Privacy</Text>
 
-          <TouchableOpacity style={styles.settingItem} onPress={() => showToast('Info', 'Loading account details...')}>
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={() => showToast('Info', 'Loading account details...')}
+          >
             <Text style={styles.settingLabel}>Edit Account</Text>
             <Text style={styles.settingArrow}>›</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingItem} onPress={() => showToast('Info', 'Loading notifications setup...')}>
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={() => showToast('Info', 'Loading notifications setup...')}
+          >
             <Text style={styles.settingLabel}>Notification Settings</Text>
             <Text style={styles.settingArrow}>›</Text>
           </TouchableOpacity>
@@ -115,7 +130,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: responsiveFontSize(2.2),
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
   },
   userEmail: {
     fontSize: responsiveFontSize(1.6),
@@ -152,7 +167,7 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: responsiveFontSize(1.7),
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: AppColors.black,
   },
   settingValue: {
     fontSize: responsiveFontSize(1.6),

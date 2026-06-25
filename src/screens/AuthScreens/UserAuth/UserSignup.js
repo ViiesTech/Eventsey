@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: responsiveFontSize(1.9),
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: AppColors.black,
     marginBottom: responsiveHeight(0.8),
   },
   customInputContainer: {
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   socialButtonText: {
     fontSize: responsiveFontSize(1.8),
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: AppColors.black,
   },
   footerRedirectRow: {
     flexDirection: 'row',

@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: responsiveFontSize(2.2),
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
     marginBottom: responsiveHeight(2),
   },
   statsRow: {
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: responsiveFontSize(2.0),
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
     marginBottom: responsiveHeight(0.5),
   },
   statLabel: {

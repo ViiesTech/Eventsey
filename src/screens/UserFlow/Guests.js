@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+} from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { AppColors } from '../../utils/AppColors';
 import {
@@ -15,7 +22,12 @@ const initialGuests = [
   { id: 4, name: 'David Lee', status: 'Declined', relation: 'Groom Friend' },
   { id: 5, name: 'Emily Davis', status: 'Attending', relation: 'Groom Family' },
   { id: 6, name: 'Michael Brown', status: 'Pending', relation: 'Bride Friend' },
-  { id: 7, name: 'Jessica Wilson', status: 'Attending', relation: 'Bride Family' },
+  {
+    id: 7,
+    name: 'Jessica Wilson',
+    status: 'Attending',
+    relation: 'Bride Family',
+  },
 ];
 
 const UserGuests = () => {
@@ -23,13 +35,16 @@ const UserGuests = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
 
-  const attendingCount = guests.filter((g) => g.status === 'Attending').length;
-  const pendingCount = guests.filter((g) => g.status === 'Pending').length;
-  const declinedCount = guests.filter((g) => g.status === 'Declined').length;
+  const attendingCount = guests.filter(g => g.status === 'Attending').length;
+  const pendingCount = guests.filter(g => g.status === 'Pending').length;
+  const declinedCount = guests.filter(g => g.status === 'Declined').length;
 
-  const filteredGuests = guests.filter((guest) => {
-    const matchesFilter = activeFilter === 'All' || guest.status === activeFilter;
-    const matchesSearch = guest.name.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredGuests = guests.filter(guest => {
+    const matchesFilter =
+      activeFilter === 'All' || guest.status === activeFilter;
+    const matchesSearch = guest.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
@@ -43,15 +58,21 @@ const UserGuests = () => {
           <Text style={styles.statsCardTitle}>RSVP Status Summary</Text>
           <View style={styles.statsRow}>
             <View style={[styles.statItem, { borderLeftColor: '#4CAF50' }]}>
-              <Text style={[styles.statNumber, { color: '#4CAF50' }]}>{attendingCount}</Text>
+              <Text style={[styles.statNumber, { color: '#4CAF50' }]}>
+                {attendingCount}
+              </Text>
               <Text style={styles.statLabel}>Attending</Text>
             </View>
             <View style={[styles.statItem, { borderLeftColor: '#FFC107' }]}>
-              <Text style={[styles.statNumber, { color: '#FFC107' }]}>{pendingCount}</Text>
+              <Text style={[styles.statNumber, { color: '#FFC107' }]}>
+                {pendingCount}
+              </Text>
               <Text style={styles.statLabel}>Pending</Text>
             </View>
             <View style={[styles.statItem, { borderLeftColor: '#F44336' }]}>
-              <Text style={[styles.statNumber, { color: '#F44336' }]}>{declinedCount}</Text>
+              <Text style={[styles.statNumber, { color: '#F44336' }]}>
+                {declinedCount}
+              </Text>
               <Text style={styles.statLabel}>Declined</Text>
             </View>
           </View>
@@ -70,7 +91,7 @@ const UserGuests = () => {
 
         {/* Filter Tabs */}
         <View style={styles.filterTabs}>
-          {['All', 'Attending', 'Pending', 'Declined'].map((filter) => {
+          {['All', 'Attending', 'Pending', 'Declined'].map(filter => {
             const isActive = activeFilter === filter;
             return (
               <TouchableOpacity
@@ -78,7 +99,12 @@ const UserGuests = () => {
                 style={[styles.filterTab, isActive && styles.filterTabActive]}
                 onPress={() => setActiveFilter(filter)}
               >
-                <Text style={[styles.filterTabText, isActive && styles.filterTabTextActive]}>
+                <Text
+                  style={[
+                    styles.filterTabText,
+                    isActive && styles.filterTabTextActive,
+                  ]}
+                >
                   {filter}
                 </Text>
               </TouchableOpacity>
@@ -89,7 +115,7 @@ const UserGuests = () => {
         {/* Guest List */}
         <View style={styles.guestList}>
           {filteredGuests.length > 0 ? (
-            filteredGuests.map((guest) => {
+            filteredGuests.map(guest => {
               let statusBg = '#E8F5E9';
               let statusText = '#2E7D32';
 
@@ -107,8 +133,12 @@ const UserGuests = () => {
                     <Text style={styles.guestName}>{guest.name}</Text>
                     <Text style={styles.guestRelation}>{guest.relation}</Text>
                   </View>
-                  <View style={[styles.statusBadge, { backgroundColor: statusBg }]}>
-                    <Text style={[styles.statusBadgeText, { color: statusText }]}>
+                  <View
+                    style={[styles.statusBadge, { backgroundColor: statusBg }]}
+                  >
+                    <Text
+                      style={[styles.statusBadgeText, { color: statusText }]}
+                    >
                       {guest.status}
                     </Text>
                   </View>
@@ -116,7 +146,9 @@ const UserGuests = () => {
               );
             })
           ) : (
-            <Text style={styles.noGuestsText}>No guests match the criteria</Text>
+            <Text style={styles.noGuestsText}>
+              No guests match the criteria
+            </Text>
           )}
         </View>
       </View>
@@ -134,7 +166,7 @@ const styles = StyleSheet.create({
   screenHeader: {
     fontSize: responsiveFontSize(2.8),
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
     marginBottom: responsiveHeight(2.5),
   },
   statsCard: {
@@ -180,7 +212,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     fontSize: responsiveFontSize(1.7),
-    color: '#1A1A1A',
+    color: AppColors.black,
     padding: 0,
   },
   filterTabs: {
@@ -230,7 +262,7 @@ const styles = StyleSheet.create({
   guestName: {
     fontSize: responsiveFontSize(1.8),
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: AppColors.black,
   },
   guestRelation: {
     fontSize: responsiveFontSize(1.4),

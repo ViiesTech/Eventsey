@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: responsiveFontSize(3),
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: AppColors.black,
     marginBottom: responsiveHeight(1),
   },
   subDescription: {

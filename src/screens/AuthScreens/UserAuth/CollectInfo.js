@@ -40,7 +40,13 @@ const CollectInfo = ({ navigation }) => {
     'Your Photo',
     'Theme Color',
   ];
-  const themeColors = ['#1A1A1A', '#F5EFEA', '#A33B43', '#2A3439', '#FF7F50'];
+  const themeColors = [
+    AppColors.black,
+    '#F5EFEA',
+    '#A33B43',
+    '#2A3439',
+    '#FF7F50',
+  ];
 
   const handleNext = () => {
     if (currentStep === 1 && (!partnerOne || !partnerTwo)) {
@@ -376,7 +382,7 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: responsiveFontSize(1.7),
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: AppColors.black,
     alignSelf: 'flex-start',
     marginBottom: responsiveHeight(0.8),
   },
@@ -473,7 +479,7 @@ const styles = StyleSheet.create({
     width: '48%',
   },
   backBtnText: {
-    color: '#1A1A1A',
+    color: AppColors.black,
     fontWeight: '600',
     fontSize: responsiveFontSize(2),
   },

@@ -1,182 +1,562 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Switch,
+  Platform,
+} from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import { AppColors } from '../../utils/AppColors';
 import {
   responsiveWidth,
   responsiveHeight,
   responsiveFontSize,
 } from '../../utils/Responsive_Dimensions';
-import { showToast } from '../../components/Toast';
+import { AppImages } from '../../assets/Images/Index';
+import { AppColors } from '../../utils/AppColors';
 
 const VendorProfile = ({ navigation }) => {
-  const handleLogout = () => {
-    showToast('Success', 'Merchant logged out');
-    setTimeout(() => {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'AuthStack' }],
-      });
-    }, 800);
+  // Toggle states for services list layout mapping
+  const [services, setServices] = useState([
+    {
+      id: '1',
+      name: 'Wedding Catering - Full',
+      price: '$3,500',
+      category: 'Catering',
+      active: true,
+    },
+    {
+      id: '2',
+      name: 'Corporate Event Photography',
+      price: '$2,800',
+      category: 'Photography',
+      active: true,
+    },
+    {
+      id: '3',
+      name: 'Kids Party Decorations',
+      price: '$1,200',
+      category: 'Decorations',
+      active: false,
+    },
+  ]);
+
+  // Global system notification toggle parameter state tracking
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  // Dynamic toggle switch interaction handler for services item listing
+  const handleToggleService = id => {
+    setServices(prevServices =>
+      prevServices.map(item =>
+        item.id === id ? { ...item, active: !item.active } : item,
+      ),
+    );
+  };
+
+  // Service item execution list controller
+  const handleDeleteService = id => {
+    setServices(prevServices => prevServices.filter(item => item.id !== id));
   };
 
   return (
-    <ScreenWrapper scrollable backgroundColor={AppColors.white}>
-      <View style={styles.container}>
-        {/* Profile Header Block */}
-        <View style={styles.avatarSection}>
-          <View style={styles.avatarGlow}>
-            <View style={styles.avatarPlaceholder}>
-              <Text style={styles.avatarText}>CC</Text>
+    <ScreenWrapper scrollable>
+      <View style={styles.contentContainer}>
+        {/* Top Interactive Absolute Avatar Control Segment */}
+        <View style={styles.headerAvatarWrapperRow}>
+          <TouchableOpacity
+            style={styles.profileInteractiveBadgeTile}
+            activeOpacity={0.85}
+          >
+            <View style={styles.userIconCircleBadgeFrame}>
+              <Image
+                source={AppImages.user}
+                style={styles.avatarDefaultVectorIcon}
+              />
             </View>
+          </TouchableOpacity>
+        </View>
+
+        {/* Brand Anchor Identity Header Block Context Node */}
+        <View style={styles.brandHeroContainer}>
+          <View style={styles.avatarMainFrame}>
+            <Image source={AppImages.logo} style={styles.logo} />
           </View>
-          <Text style={styles.userName}>Classic Catering Co.</Text>
-          <Text style={styles.userEmail}>partner@classiccatering.com</Text>
+          <Text style={styles.subtextTag}>Vendors</Text>
+          <Text style={styles.welcomeTitle}>Vendor Profile & Settings</Text>
         </View>
 
-        {/* Business Settings */}
-        <View style={styles.settingsGroup}>
-          <Text style={styles.groupTitle}>Business Profile</Text>
+        {/* Primary Operational Identity Information Tags Group */}
+        <View style={styles.vendorPrimaryTitleBlock}>
+          <Text style={styles.vendorProfileDisplayTitleText}>Vendor Name</Text>
+          <Text style={styles.premiumBadgeSubtitleLabelText}>
+            Premium Member
+          </Text>
+        </View>
 
-          <TouchableOpacity style={styles.settingItem} onPress={() => showToast('Info', 'Editing company info...')}>
-            <Text style={styles.settingLabel}>Company Details</Text>
-            <Text style={styles.settingValue}>Food & Beverage</Text>
-          </TouchableOpacity>
+        {/* Business Analytics Statistical Triple Row Counters Matrix Component */}
+        <View style={styles.statisticsMetricsRowContainerGrid}>
+          <View style={styles.metricItemDashboardCardFrame}>
+            <Image source={AppImages.tickCirlcle} style={styles.icon} />
+            <Text style={styles.metricCounterNumericalValueHeading}>47</Text>
+            <Text style={styles.metricSecondaryMetaLabelText}>Completed</Text>
+          </View>
 
-          <TouchableOpacity style={styles.settingItem} onPress={() => showToast('Info', 'Opening portfolio files...')}>
-            <Text style={styles.settingLabel}>Menu Portfolio</Text>
-            <Text style={styles.settingValue}>3 Active Catalogs</Text>
-          </TouchableOpacity>
+          <View style={styles.metricItemDashboardCardFrame}>
+            <Image source={AppImages.star} style={styles.icon} />
+            <Text style={styles.metricCounterNumericalValueHeading}>4.9</Text>
+            <Text style={styles.metricSecondaryMetaLabelText}>Rating</Text>
+          </View>
 
-          <TouchableOpacity style={styles.settingItem} onPress={() => showToast('Info', 'Editing service locations...')}>
-            <Text style={styles.settingLabel}>Service Radius</Text>
-            <Text style={styles.settingValue}>Los Angeles (50mi)</Text>
+          <View style={styles.metricItemDashboardCardFrame}>
+            <Image source={AppImages.reviews} style={styles.icon} />
+            <Text style={styles.metricCounterNumericalValueHeading}>12</Text>
+            <Text style={styles.metricSecondaryMetaLabelText}>Reviews</Text>
+          </View>
+        </View>
+
+        {/* Block Module Section Label: Business Managed Offerings Grid */}
+        <View style={styles.sectionHeaderFlexContainerRow}>
+          <Text style={styles.blockSectionHeadingTitleText}>My Services</Text>
+          <TouchableOpacity
+            style={styles.addActionPillCapsuleButton}
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('AddService')}
+          >
+            <Image source={AppImages.plus} style={styles.plusIcon} />
+            <Text style={styles.addActionButtonLabelText}>Add</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.settingsGroup}>
-          <Text style={styles.groupTitle}>Payouts & Billing</Text>
+        {/* My Offerings Managed FlatList Queue Loop */}
+        <View style={styles.listContainerWrapperBlock}>
+          {services.map(item => (
+            <TouchableOpacity
+              key={item.id}
+              activeOpacity={0.6}
+              onPress={() =>
+                navigation.navigate('ServiceDetails', { data: item })
+              }
+              style={styles.serviceOfferingItemRowTileCard}
+            >
+              <View style={styles.serviceMetaIconBoxPlaceholderFrame}>
+                <Image source={AppImages.jobs} style={styles.serviceIcon} />
+              </View>
 
-          <TouchableOpacity style={styles.settingItem} onPress={() => showToast('Info', 'Opening payout methods...')}>
-            <Text style={styles.settingLabel}>Bank Accounts</Text>
-            <Text style={styles.settingArrow}>›</Text>
-          </TouchableOpacity>
+              <View style={styles.serviceItemIdentityTextLabelsGroup}>
+                <Text style={styles.serviceItemMainTitleText} numberOfLines={1}>
+                  {item.name}
+                </Text>
+                <Text style={styles.serviceItemRatePriceTagLabel}>
+                  {item.price}
+                </Text>
+              </View>
 
-          <TouchableOpacity style={styles.settingItem} onPress={() => showToast('Info', 'Opening transaction logs...')}>
-            <Text style={styles.settingLabel}>Earning Invoices</Text>
-            <Text style={styles.settingArrow}>›</Text>
-          </TouchableOpacity>
+              <View style={styles.serviceActionInteractiveControllersCluster}>
+                <Switch
+                  trackColor={{ false: '#DCDCDC', true: '#8ADED5' }}
+                  thumbColor={'#FFFFFF'}
+                  ios_backgroundColor="#DCDCDC"
+                  onValueChange={() => handleToggleService(item.id)}
+                  value={item.active}
+                  style={
+                    Platform.OS === 'ios'
+                      ? { transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }
+                      : {}
+                  }
+                />
+                <TouchableOpacity
+                  style={styles.serviceActionButton}
+                  activeOpacity={0.7}
+                  onPress={() => navigation.navigate('AddService')}
+                >
+                  <Image source={AppImages.edit} style={styles.deleteIcon} />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.serviceActionButton}
+                  activeOpacity={0.7}
+                  onPress={() => handleDeleteService(item.id)}
+                >
+                  <Image source={AppImages.delete} style={styles.deleteIcon} />
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          ))}
         </View>
 
-        {/* Logout Button */}
-        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-          <Text style={styles.logoutBtnText}>Logout Account</Text>
-        </TouchableOpacity>
+        {/* Block Module Section Label: Standard Settings Navigation Controls */}
+        <Text style={styles.settingsTitleText}>Settings</Text>
+
+        {/* Global Settings Composite Group Options Control Panel Layout */}
+        <View style={styles.settingsGroupListConsoleStackCardContainer}>
+          {/* Option Node: Edit Business Profile Profile Card Information */}
+          <TouchableOpacity
+            style={styles.settingsNavigationStandardHyperlinkRowTile}
+            activeOpacity={0.75}
+            onPress={() => navigation.navigate('VendorEditProfile')}
+          >
+            <View style={[styles.settingIconContainer]}>
+              <Image source={AppImages.edit} style={styles.settingIcon} />
+            </View>
+            <View style={styles.settingMetaContentLabelBlockColumn}>
+              <Text style={styles.settingPrimaryActionLabelHeadingText}>
+                Edit Profile
+              </Text>
+              <Text style={styles.settingMetaSubtextDescriptionLabel}>
+                Update business information
+              </Text>
+            </View>
+            <Image source={AppImages.arrowRight} style={styles.arrowRight} />
+          </TouchableOpacity>
+
+          {/* Option Node: Modify Accounts Credentials Access */}
+          <TouchableOpacity
+            style={styles.settingsNavigationStandardHyperlinkRowTile}
+            activeOpacity={0.75}
+          >
+            <View style={[styles.settingIconContainer]}>
+              <Image source={AppImages.lock} style={styles.settingIcon} />
+            </View>
+            <View style={styles.settingMetaContentLabelBlockColumn}>
+              <Text style={styles.settingPrimaryActionLabelHeadingText}>
+                Change Password
+              </Text>
+              <Text style={styles.settingMetaSubtextDescriptionLabel}>
+                Update security settings
+              </Text>
+            </View>
+            <Image source={AppImages.arrowRight} style={styles.arrowRight} />
+          </TouchableOpacity>
+
+          {/* Option Node: Broadcast Alerts Subsystem Configurations Trigger Block */}
+          <View style={styles.settingsNavigationStandardHyperlinkRowTile}>
+            <View style={[styles.settingIconContainer]}>
+              <Image source={AppImages.bell} style={styles.settingIcon} />
+            </View>
+            <View style={styles.settingMetaContentLabelBlockColumn}>
+              <Text style={styles.settingPrimaryActionLabelHeadingText}>
+                Notifications
+              </Text>
+              <Text style={styles.settingMetaSubtextDescriptionLabel}>
+                Receive job alerts
+              </Text>
+            </View>
+            <Switch
+              trackColor={{ false: '#DCDCDC', true: '#8ADED5' }}
+              thumbColor={'#FFFFFF'}
+              ios_backgroundColor="#DCDCDC"
+              onValueChange={setNotificationsEnabled}
+              value={notificationsEnabled}
+              style={
+                Platform.OS === 'ios'
+                  ? { transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }
+                  : {}
+              }
+            />
+          </View>
+
+          {/* Option Node: Account Closure Destruction Subsystem De-authenticator Trigger */}
+          <TouchableOpacity
+            style={[
+              styles.settingsNavigationStandardHyperlinkRowTile,
+              { borderBottomWidth: 0, marginBottom: 0 },
+            ]}
+            activeOpacity={0.75}
+          >
+            <View style={[styles.settingIconContainer]}>
+              <Image source={AppImages.logout} style={styles.settingIcon} />
+            </View>
+            <View style={styles.settingMetaContentLabelBlockColumn}>
+              <Text style={[styles.logoutText]}>Log Out</Text>
+              <Text style={styles.settingMetaSubtextDescriptionLabel}>
+                Sign out of your account
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
+      <View style={{ height: responsiveHeight(4) }} />
     </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: responsiveWidth(6),
+  contentContainer: {
+    backgroundColor: AppColors.white,
+    marginHorizontal: responsiveWidth(4),
+    borderRadius: 36,
+    paddingHorizontal: responsiveWidth(5),
     paddingTop: responsiveHeight(2),
-    paddingBottom: responsiveHeight(12),
+    paddingBottom: responsiveHeight(4),
+    marginTop: responsiveHeight(2),
+    marginBottom: responsiveHeight(2),
+    minHeight: '95%',
   },
-  avatarSection: {
+  headerAvatarWrapperRow: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: responsiveHeight(4),
+    marginTop: responsiveHeight(1),
   },
-  avatarGlow: {
-    width: responsiveWidth(24),
-    height: responsiveWidth(24),
-    borderRadius: responsiveWidth(12),
-    backgroundColor: '#F0F9F8',
-    borderWidth: 2,
-    borderColor: AppColors.secondary,
+  profileInteractiveBadgeTile: {
+    position: 'relative',
+    marginRight: responsiveWidth(1),
+  },
+  userIconCircleBadgeFrame: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: AppColors.primary,
+    borderWidth: 1,
+    borderColor: AppColors.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: responsiveHeight(1.5),
   },
-  avatarPlaceholder: {
+  avatarDefaultVectorIcon: {
+    height: responsiveWidth(6),
+    width: responsiveWidth(6),
+    tintColor: AppColors.black,
+  },
+  brandHeroContainer: {
+    alignItems: 'center',
+    marginTop: -responsiveHeight(2),
+    marginBottom: responsiveHeight(1),
+  },
+  avatarMainFrame: {
     width: responsiveWidth(20),
     height: responsiveWidth(20),
-    borderRadius: responsiveWidth(10),
-    backgroundColor: AppColors.secondary,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  avatarText: {
-    color: '#1A2E2B',
-    fontSize: responsiveFontSize(2.4),
-    fontWeight: '700',
+  logo: {
+    height: responsiveHeight(50),
+    width: responsiveWidth(50),
+    resizeMode: 'contain',
   },
-  userName: {
+  subtextTag: {
+    fontSize: responsiveFontSize(1.3),
+    fontWeight: '700',
+    color: AppColors.black,
+    marginTop: responsiveHeight(0.6),
+  },
+  welcomeTitle: {
+    fontSize: responsiveFontSize(2),
+    color: AppColors.black,
+    fontWeight: '500',
+    marginTop: responsiveHeight(1),
+  },
+  vendorPrimaryTitleBlock: {
+    alignItems: 'center',
+    marginBottom: responsiveHeight(2.5),
+  },
+  vendorProfileDisplayTitleText: {
     fontSize: responsiveFontSize(2.2),
-    fontWeight: '700',
-    color: '#1A1A1A',
+    fontWeight: '600',
+    color: AppColors.black,
   },
-  userEmail: {
-    fontSize: responsiveFontSize(1.6),
-    color: '#8E8E93',
+  premiumBadgeSubtitleLabelText: {
+    fontSize: responsiveFontSize(1.75),
+    color: '#4A4A4A',
+    fontWeight: '400',
     marginTop: responsiveHeight(0.4),
   },
-  settingsGroup: {
-    marginBottom: responsiveHeight(3.5),
-  },
-  groupTitle: {
-    fontSize: responsiveFontSize(1.6),
-    fontWeight: '700',
-    color: '#6E8A85',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: responsiveHeight(1.5),
-  },
-  settingItem: {
+  statisticsMetricsRowContainerGrid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: AppColors.white,
+    marginBottom: responsiveHeight(2.5),
+  },
+  metricItemDashboardCardFrame: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#EFEFEF',
-    borderRadius: 14,
-    padding: responsiveWidth(4.5),
-    marginBottom: responsiveHeight(1.2),
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.01,
-    shadowRadius: 2,
-    elevation: 0.5,
-  },
-  settingLabel: {
-    fontSize: responsiveFontSize(1.7),
-    fontWeight: '600',
-    color: '#1A1A1A',
-  },
-  settingValue: {
-    fontSize: responsiveFontSize(1.6),
-    color: '#8E8E93',
-    fontWeight: '500',
-  },
-  settingArrow: {
-    fontSize: responsiveFontSize(2.2),
-    color: '#6E8A85',
-  },
-  logoutBtn: {
-    backgroundColor: '#F6FBFB',
-    borderWidth: 1,
-    borderColor: AppColors.secondary,
     borderRadius: 16,
-    height: responsiveHeight(6.2),
+    paddingVertical: responsiveHeight(1.8),
+    alignItems: 'center',
+    marginHorizontal: responsiveWidth(1.2),
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.02,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  icon: {
+    height: responsiveWidth(5),
+    width: responsiveWidth(5),
+    resizeMode: 'contain',
+    fontSize: responsiveFontSize(2),
+    marginBottom: responsiveHeight(0.6),
+  },
+  metricCounterNumericalValueHeading: {
+    fontSize: responsiveFontSize(2.2),
+    fontWeight: '700',
+    color: AppColors.black,
+  },
+  metricSecondaryMetaLabelText: {
+    fontSize: responsiveFontSize(1.25),
+    color: '#9E9E9E',
+    fontWeight: '500',
+    marginTop: responsiveHeight(0.4),
+  },
+  sectionHeaderFlexContainerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: responsiveHeight(1),
+    marginBottom: responsiveHeight(1.2),
+    width: '100%',
+  },
+  blockSectionHeadingTitleText: {
+    fontSize: responsiveFontSize(1.8),
+    fontWeight: '600',
+    color: AppColors.black,
+  },
+  addActionPillCapsuleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#8ADED5', // Visual signature palette layout match
+    paddingHorizontal: responsiveWidth(3.5),
+    paddingVertical: responsiveHeight(0.6),
+    borderRadius: 8,
+  },
+  plusIcon: {
+    height: responsiveWidth(4),
+    width: responsiveWidth(4),
+    resizeMode: 'contain',
+    marginRight: responsiveWidth(1),
+  },
+  addActionButtonLabelText: {
+    fontSize: responsiveFontSize(1.45),
+    color: '#1A2E2B',
+    fontWeight: '600',
+  },
+  listContainerWrapperBlock: {
+    width: '100%',
+  },
+  serviceOfferingItemRowTileCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
+    borderRadius: 16,
+    padding: responsiveWidth(3.8),
+    marginBottom: responsiveHeight(1.4),
+  },
+  serviceMetaIconBoxPlaceholderFrame: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    backgroundColor: 'rgba(188, 138, 77, 0.1)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: responsiveHeight(2),
+    marginRight: responsiveWidth(3.5),
   },
-  logoutBtnText: {
-    color: '#1A2E2B',
-    fontWeight: '700',
-    fontSize: responsiveFontSize(1.9),
+  serviceIcon: {
+    height: responsiveWidth(4),
+    width: responsiveWidth(4),
+    resizeMode: 'contain',
+    tintColor: AppColors.primary,
+  },
+  serviceItemIdentityTextLabelsGroup: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingRight: responsiveWidth(2),
+  },
+  serviceItemMainTitleText: {
+    fontSize: responsiveFontSize(1.55),
+    fontWeight: '600',
+    color: AppColors.black,
+    marginBottom: responsiveHeight(0.2),
+  },
+  serviceItemRatePriceTagLabel: {
+    fontSize: responsiveFontSize(1.35),
+    color: '#757575',
+    fontWeight: '500',
+  },
+  serviceActionInteractiveControllersCluster: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  serviceActionButton: {
+    width: 32,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // marginLeft: responsiveWidth(2.5),
+  },
+  deleteIcon: {
+    height: responsiveWidth(4),
+    width: responsiveWidth(4),
+    resizeMode: 'contain',
+  },
+  settingsTitleText: {
+    fontSize: responsiveFontSize(1.8),
+    fontWeight: '600',
+    color: AppColors.black,
+    marginTop: responsiveHeight(2),
+    marginBottom: responsiveHeight(1.5),
+  },
+  settingsGroupListConsoleStackCardContainer: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
+    borderRadius: 18,
+    paddingHorizontal: responsiveWidth(4),
+    paddingVertical: responsiveHeight(1),
+    width: '100%',
+  },
+  settingsNavigationStandardHyperlinkRowTile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: responsiveHeight(1.6),
+    borderBottomWidth: 1,
+    borderBottomColor: '#F5F5F5',
+  },
+  settingIconContainer: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: responsiveWidth(4),
+    backgroundColor: AppColors.secondary,
+  },
+  settingIcon: {
+    height: responsiveWidth(4),
+    width: responsiveWidth(4),
+    resizeMode: 'contain',
+    tintColor: AppColors.black,
+  },
+  settingMetaContentLabelBlockColumn: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  settingPrimaryActionLabelHeadingText: {
+    fontSize: responsiveFontSize(1.6),
+    fontWeight: '500',
+    color: AppColors.black,
+    marginBottom: responsiveHeight(0.2),
+  },
+  logoutText: {
+    fontSize: responsiveFontSize(1.6),
+    fontWeight: '500',
+    color: AppColors.red,
+    marginBottom: responsiveHeight(0.2),
+  },
+  settingMetaSubtextDescriptionLabel: {
+    fontSize: responsiveFontSize(1.3),
+    color: '#9E9E9E',
+    fontWeight: '400',
+  },
+  arrowRight: {
+    height: responsiveWidth(4),
+    width: responsiveWidth(4),
+    resizeMode: 'contain',
   },
 });
 

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppImages } from '../../../assets/Images/Index';
 import {
   responsiveHeight,
@@ -9,13 +8,12 @@ import {
 import { AppColors } from '../../../utils/AppColors';
 
 const Splash = ({ navigation }) => {
-  const insets = useSafeAreaInsets();
-
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       navigation.replace('Onboarding');
     }, 2000);
-  }, []);
+    return () => clearTimeout(timer);
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
