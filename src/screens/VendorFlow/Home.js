@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import Text from '../../components/CustomText';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import {
   responsiveWidth,
@@ -8,9 +9,7 @@ import {
 } from '../../utils/Responsive_Dimensions';
 import { AppImages } from '../../assets/Images/Index';
 import { AppColors } from '../../utils/AppColors';
-
-// Extracted from render to prevent array reallocation overhead on re-renders
-const SCALLOP_ITEMS = Array.from({ length: 16 });
+import LogoHeader from '../../components/LogoHeader';
 
 const VendorHome = ({ navigation }) => {
   const stats = [
@@ -52,169 +51,110 @@ const VendorHome = ({ navigation }) => {
   ];
 
   return (
-    <View style={styles.container}>
-      {/* Absolute Side Columns for Scallop Background Edge Decor */}
-      <View style={styles.leftScallopColumn}>
-        {SCALLOP_ITEMS.map((_, i) => (
-          <View key={`l-${i}`} style={styles.scallopCircle} />
-        ))}
-      </View>
-      <View style={styles.rightScallopColumn}>
-        {SCALLOP_ITEMS.map((_, i) => (
-          <View key={`r-${i}`} style={styles.scallopCircle} />
-        ))}
-      </View>
+    <ScreenWrapper scrollable>
+      <View style={styles.contentContainer}>
+        <LogoHeader title="Welcome back" />
 
-      <ScreenWrapper scrollable style={styles.screenBackground}>
-        <View style={styles.contentContainer}>
-          {/* Top Identity Segment Wrapper */}
-          <View style={styles.brandHeroContainer}>
-            <View style={styles.avatarMainFrame}>
-              <Image source={AppImages.logo} style={styles.logo} />
-            </View>
-            <Text style={styles.subtextTag}>Vendors</Text>
-            <Text style={styles.welcomeTitle}>Welcome back</Text>
+        {/* Profile Details Bar */}
+        <View style={styles.profileStripRow}>
+          <View style={styles.vendorIdentityGroup}>
+            <Image
+              source={{
+                uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+              }}
+              style={styles.avatarThumbnail}
+            />
+            <Text style={styles.profileNameText}>John Wilson 👑</Text>
           </View>
-
-          {/* Profile Details Bar */}
-          <View style={styles.profileStripRow}>
-            <View style={styles.vendorIdentityGroup}>
-              <Image
-                source={{
-                  uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-                }}
-                style={styles.avatarThumbnail}
-              />
-              <Text style={styles.profileNameText}>John Wilson 👑</Text>
-            </View>
-            <TouchableOpacity
-              style={styles.bellActionCircle}
-              activeOpacity={0.7}
-            >
-              <Image source={AppImages.bell} style={styles.bell} />
-              <View style={styles.activeNotificationDot} />
-            </TouchableOpacity>
-          </View>
-
-          <Text style={styles.statusDescriptionText}>
-            Here's what's happening with your business
-          </Text>
-
-          {/* Matrix Stats Cards Layout */}
-          <View style={styles.metricsGridContainer}>
-            {stats.map(card => (
-              <View key={card.id} style={styles.metricItemCard}>
-                <View style={styles.metricIconBadgeWrapper}>
-                  <Image source={card.icon} style={styles.optionsIcon} />
-                </View>
-                <Text style={styles.metricNumericValue}>{card.value}</Text>
-                <Text style={styles.metricMetaLabel}>{card.title}</Text>
-              </View>
-            ))}
-          </View>
-
-          {/* Quick Action Block */}
-          <Text style={styles.blockSectionHeading}>Quick Actions</Text>
-          <View style={styles.actionGridContainer}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Jobs')}
-              style={styles.actionGridTile}
-              activeOpacity={0.8}
-            >
-              <Image source={AppImages.jobs} style={styles.quickActionsIcon} />
-              <Text style={styles.actionTileTextLabel}>Jobs</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Chat')}
-              style={styles.actionGridTile}
-              activeOpacity={0.8}
-            >
-              <Image source={AppImages.chat} style={styles.quickActionsIcon} />
-              <Text style={styles.actionTileTextLabel}>Messages</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => navigation.navigate('MyEarnings')}
-              style={styles.actionGridTile}
-              activeOpacity={0.8}
-            >
-              <Image
-                source={AppImages.dollar}
-                style={styles.quickActionsIcon}
-              />
-              <Text style={styles.actionTileTextLabel}>My Earnings</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.actionGridTile}
-              onPress={() => navigation.navigate('Premium')}
-              activeOpacity={0.8}
-            >
-              <Image source={AppImages.star} style={styles.quickActionsIcon} />
-              <Text style={styles.actionTileTextLabel}>Premium</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Business Log Activity Segment */}
-          <Text style={styles.blockSectionHeading}>Recent Activity</Text>
-          <View style={styles.activityMasterLogContainer}>
-            {recentActivities.map(log => (
-              <View key={log.id} style={styles.activityFeedItemRow}>
-                <View
-                  style={[
-                    styles.activityStatusIndicatorDot,
-                    { backgroundColor: log.color },
-                  ]}
-                />
-                <View style={styles.activityContentDescriptionGroup}>
-                  <Text style={styles.activityLogCoreText}>{log.text}</Text>
-                  <Text style={styles.activityTimeOffsetLabel}>{log.time}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-
-          <View style={styles.footerSpacing} />
+          <TouchableOpacity style={styles.bellActionCircle} activeOpacity={0.7}>
+            <Image source={AppImages.bell} style={styles.bell} />
+            <View style={styles.activeNotificationDot} />
+          </TouchableOpacity>
         </View>
-      </ScreenWrapper>
-    </View>
+
+        <Text style={styles.statusDescriptionText}>
+          Here's what's happening with your business
+        </Text>
+
+        {/* Matrix Stats Cards Layout */}
+        <View style={styles.metricsGridContainer}>
+          {stats.map(card => (
+            <View key={card.id} style={styles.metricItemCard}>
+              <View style={styles.metricIconBadgeWrapper}>
+                <Image source={card.icon} style={styles.optionsIcon} />
+              </View>
+              <Text style={styles.metricNumericValue}>{card.value}</Text>
+              <Text style={styles.metricMetaLabel}>{card.title}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* Quick Action Block */}
+        <Text style={styles.blockSectionHeading}>Quick Actions</Text>
+        <View style={styles.actionGridContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Jobs')}
+            style={styles.actionGridTile}
+            activeOpacity={0.8}
+          >
+            <Image source={AppImages.jobs} style={styles.quickActionsIcon} />
+            <Text style={styles.actionTileTextLabel}>Jobs</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Chat')}
+            style={styles.actionGridTile}
+            activeOpacity={0.8}
+          >
+            <Image source={AppImages.chat} style={styles.quickActionsIcon} />
+            <Text style={styles.actionTileTextLabel}>Messages</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate('MyEarnings')}
+            style={styles.actionGridTile}
+            activeOpacity={0.8}
+          >
+            <Image source={AppImages.dollar} style={styles.quickActionsIcon} />
+            <Text style={styles.actionTileTextLabel}>My Earnings</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.actionGridTile}
+            onPress={() => navigation.navigate('Premium')}
+            activeOpacity={0.8}
+          >
+            <Image source={AppImages.star} style={styles.quickActionsIcon} />
+            <Text style={styles.actionTileTextLabel}>Premium</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Business Log Activity Segment */}
+        <Text style={styles.blockSectionHeading}>Recent Activity</Text>
+        <View style={styles.activityMasterLogContainer}>
+          {recentActivities.map(log => (
+            <View key={log.id} style={styles.activityFeedItemRow}>
+              <View
+                style={[
+                  styles.activityStatusIndicatorDot,
+                  { backgroundColor: log.color },
+                ]}
+              />
+              <View style={styles.activityContentDescriptionGroup}>
+                <Text style={styles.activityLogCoreText}>{log.text}</Text>
+                <Text style={styles.activityTimeOffsetLabel}>{log.time}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.footerSpacing} />
+      </View>
+    </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFA091',
-  },
-  screenBackground: {
-    backgroundColor: 'transparent',
-  },
-  leftScallopColumn: {
-    position: 'absolute',
-    left: -responsiveWidth(6),
-    top: 0,
-    bottom: 0,
-    width: responsiveWidth(12),
-    justifyContent: 'space-around',
-    zIndex: 0,
-  },
-  rightScallopColumn: {
-    position: 'absolute',
-    right: -responsiveWidth(6),
-    top: 0,
-    bottom: 0,
-    width: responsiveWidth(12),
-    justifyContent: 'space-around',
-    zIndex: 0,
-  },
-  scallopCircle: {
-    width: responsiveWidth(12),
-    height: responsiveWidth(12),
-    borderRadius: responsiveWidth(6),
-    backgroundColor: AppColors.white,
-    marginBottom: responsiveHeight(0.3),
-  },
   contentContainer: {
     backgroundColor: AppColors.white,
     marginHorizontal: responsiveWidth(6),
@@ -225,33 +165,6 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(2),
     marginBottom: responsiveHeight(2),
     minHeight: '95%',
-  },
-  brandHeroContainer: {
-    alignItems: 'center',
-    marginVertical: responsiveHeight(1.5),
-  },
-  avatarMainFrame: {
-    width: responsiveWidth(20),
-    height: responsiveWidth(20),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    height: responsiveHeight(50),
-    width: responsiveWidth(50),
-    resizeMode: 'contain',
-  },
-  subtextTag: {
-    fontSize: responsiveFontSize(1.3),
-    fontWeight: '700',
-    color: AppColors.black,
-    marginTop: responsiveHeight(0.6),
-  },
-  welcomeTitle: {
-    fontSize: responsiveFontSize(2.2),
-    color: '#5A5A5A',
-    fontWeight: '400',
-    marginTop: responsiveHeight(1.2),
   },
   profileStripRow: {
     flexDirection: 'row',

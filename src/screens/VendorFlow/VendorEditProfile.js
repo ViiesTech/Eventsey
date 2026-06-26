@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   TextInput,
   Alert,
 } from 'react-native';
+import Text from '../../components/CustomText';
 import { launchImageLibrary } from 'react-native-image-picker';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import {
@@ -17,6 +17,7 @@ import {
 } from '../../utils/Responsive_Dimensions';
 import { AppImages } from '../../assets/Images/Index';
 import { AppColors } from '../../utils/AppColors';
+import LogoHeader from '../../components/LogoHeader';
 
 const VendorEditProfile = ({ navigation }) => {
   // Input Form States
@@ -69,30 +70,7 @@ const VendorEditProfile = ({ navigation }) => {
     <ScreenWrapper scrollable>
       {/* MAIN WHITE CARD CONTAINER */}
       <View style={styles.contentContainer}>
-        {/* Top Header Row Navigation */}
-        <View style={styles.navigationHeaderRow}>
-          <TouchableOpacity
-            onPress={() => navigation?.goBack()}
-            style={styles.backButtonTile}
-            activeOpacity={0.7}
-          >
-            <Image
-              source={AppImages.arrowLeft}
-              style={styles.backArrowIcon}
-              resizeMode="contain"
-            />
-            <Text style={styles.backActionLabelText}>Back</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Brand Core Identity Area */}
-        <View style={styles.brandHeroContainer}>
-          <View style={styles.avatarMainFrame}>
-            <Image source={AppImages.logo} style={styles.logo} />
-          </View>
-          <Text style={styles.subtextTag}>Vendors</Text>
-          <Text style={styles.welcomeTitle}>Edit Profile</Text>
-        </View>
+        <LogoHeader goBack title="Edit Profile" headerHeight={25} />
 
         {/* PROFILE PICTURE HERO BANNER (Teal Accent Card) */}
         <View style={styles.profilePictureBannerContainer}>
@@ -279,58 +257,6 @@ const styles = StyleSheet.create({
     paddingBottom: responsiveHeight(2),
     marginTop: responsiveHeight(2),
     marginBottom: responsiveHeight(1),
-  },
-  navigationHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: '100%',
-    marginTop: responsiveHeight(1),
-  },
-  backButtonTile: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backArrowIcon: {
-    height: 20,
-    width: 20,
-    tintColor: AppColors.black,
-    resizeMode: 'contain',
-    marginRight: responsiveWidth(2),
-  },
-  backActionLabelText: {
-    fontSize: responsiveFontSize(1.6),
-    color: AppColors.black,
-    fontWeight: '500',
-  },
-  brandHeroContainer: {
-    alignItems: 'center',
-    marginTop: -responsiveHeight(2),
-    marginBottom: responsiveHeight(1),
-  },
-  avatarMainFrame: {
-    width: responsiveWidth(20),
-    height: responsiveWidth(20),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    height: responsiveHeight(50),
-    width: responsiveWidth(50),
-    resizeMode: 'contain',
-  },
-  subtextTag: {
-    fontSize: responsiveFontSize(1.3),
-    fontWeight: '700',
-    color: AppColors.black,
-    marginTop: responsiveHeight(0.6),
-  },
-  welcomeTitle: {
-    fontSize: responsiveFontSize(2),
-    color: AppColors.black,
-    fontWeight: '500',
-    marginTop: responsiveHeight(0.5),
   },
   profilePictureBannerContainer: {
     backgroundColor: '#8ADED5',

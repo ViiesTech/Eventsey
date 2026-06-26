@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
-} from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import Text from '../../components/CustomText';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { AppColors } from '../../utils/AppColors';
 import {

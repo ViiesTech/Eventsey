@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   TextInput,
   FlatList,
 } from 'react-native';
+import Text from '../../components/CustomText';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import {
   responsiveWidth,
@@ -16,6 +16,7 @@ import {
 } from '../../utils/Responsive_Dimensions';
 import { AppImages } from '../../assets/Images/Index';
 import { AppColors } from '../../utils/AppColors';
+import LogoHeader from '../../components/LogoHeader';
 
 const VendorMessages = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -121,17 +122,11 @@ const VendorMessages = ({ navigation }) => {
   return (
     <ScreenWrapper scrollable>
       <View style={styles.contentContainer}>
-        {/* Persistent App Header Node Wrapper */}
-        <View style={styles.brandHeroContainer}>
-          <View style={styles.avatarMainFrame}>
-            <Image source={AppImages.logo} style={styles.logo} />
-          </View>
-          <Text style={styles.subtextTag}>Vendors</Text>
-          <Text style={styles.welcomeTitle}>Messages</Text>
-          <Text style={styles.statusDescriptionText}>
-            Chat with your clients
-          </Text>
-        </View>
+        <LogoHeader
+          title="Messages"
+          description={`Chat with your clients`}
+          headerHeight={20}
+        />
 
         {/* Input Search Module Element */}
         <View style={styles.searchBarInputWrapperField}>
@@ -181,39 +176,6 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(2),
     marginBottom: responsiveHeight(2),
     minHeight: '95%',
-  },
-  brandHeroContainer: {
-    alignItems: 'center',
-    marginVertical: responsiveHeight(1),
-  },
-  avatarMainFrame: {
-    width: responsiveWidth(20),
-    height: responsiveWidth(20),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    height: responsiveHeight(50),
-    width: responsiveWidth(50),
-    resizeMode: 'contain',
-  },
-  subtextTag: {
-    fontSize: responsiveFontSize(1.3),
-    fontWeight: '700',
-    color: AppColors.black,
-    marginTop: responsiveHeight(0.6),
-  },
-  welcomeTitle: {
-    fontSize: responsiveFontSize(2.2),
-    color: AppColors.black || '#000000',
-    fontWeight: '600',
-    marginTop: responsiveHeight(1.2),
-  },
-  statusDescriptionText: {
-    fontSize: responsiveFontSize(1.6),
-    color: AppColors.black,
-    marginTop: responsiveHeight(1.5),
-    alignSelf: 'flex-start',
   },
   searchBarInputWrapperField: {
     flexDirection: 'row',

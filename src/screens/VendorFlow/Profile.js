@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   Switch,
   Platform,
 } from 'react-native';
+import Text from '../../components/CustomText';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import {
   responsiveWidth,
@@ -16,6 +16,7 @@ import {
 } from '../../utils/Responsive_Dimensions';
 import { AppImages } from '../../assets/Images/Index';
 import { AppColors } from '../../utils/AppColors';
+import LogoHeader from '../../components/LogoHeader';
 
 const VendorProfile = ({ navigation }) => {
   // Toggle states for services list layout mapping
@@ -63,29 +64,7 @@ const VendorProfile = ({ navigation }) => {
   return (
     <ScreenWrapper scrollable>
       <View style={styles.contentContainer}>
-        {/* Top Interactive Absolute Avatar Control Segment */}
-        <View style={styles.headerAvatarWrapperRow}>
-          <TouchableOpacity
-            style={styles.profileInteractiveBadgeTile}
-            activeOpacity={0.85}
-          >
-            <View style={styles.userIconCircleBadgeFrame}>
-              <Image
-                source={AppImages.user}
-                style={styles.avatarDefaultVectorIcon}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {/* Brand Anchor Identity Header Block Context Node */}
-        <View style={styles.brandHeroContainer}>
-          <View style={styles.avatarMainFrame}>
-            <Image source={AppImages.logo} style={styles.logo} />
-          </View>
-          <Text style={styles.subtextTag}>Vendors</Text>
-          <Text style={styles.welcomeTitle}>Vendor Profile & Settings</Text>
-        </View>
+        <LogoHeader title="Profile & Settings" profileIcon headerHeight={25} />
 
         {/* Primary Operational Identity Information Tags Group */}
         <View style={styles.vendorPrimaryTitleBlock}>
@@ -293,60 +272,6 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(2),
     marginBottom: responsiveHeight(2),
     minHeight: '95%',
-  },
-  headerAvatarWrapperRow: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginTop: responsiveHeight(1),
-  },
-  profileInteractiveBadgeTile: {
-    position: 'relative',
-    marginRight: responsiveWidth(1),
-  },
-  userIconCircleBadgeFrame: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: AppColors.primary,
-    borderWidth: 1,
-    borderColor: AppColors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  avatarDefaultVectorIcon: {
-    height: responsiveWidth(6),
-    width: responsiveWidth(6),
-    tintColor: AppColors.black,
-  },
-  brandHeroContainer: {
-    alignItems: 'center',
-    marginTop: -responsiveHeight(2),
-    marginBottom: responsiveHeight(1),
-  },
-  avatarMainFrame: {
-    width: responsiveWidth(20),
-    height: responsiveWidth(20),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    height: responsiveHeight(50),
-    width: responsiveWidth(50),
-    resizeMode: 'contain',
-  },
-  subtextTag: {
-    fontSize: responsiveFontSize(1.3),
-    fontWeight: '700',
-    color: AppColors.black,
-    marginTop: responsiveHeight(0.6),
-  },
-  welcomeTitle: {
-    fontSize: responsiveFontSize(2),
-    color: AppColors.black,
-    fontWeight: '500',
-    marginTop: responsiveHeight(1),
   },
   vendorPrimaryTitleBlock: {
     alignItems: 'center',

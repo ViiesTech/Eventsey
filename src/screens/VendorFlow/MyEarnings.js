@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import Text from '../../components/CustomText';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import {
   responsiveWidth,
@@ -8,6 +9,7 @@ import {
 } from '../../utils/Responsive_Dimensions';
 import { AppImages } from '../../assets/Images/Index';
 import { AppColors } from '../../utils/AppColors';
+import LogoHeader from '../../components/LogoHeader';
 
 const MyEarnings = ({ navigation }) => {
   // Mock Data matching your transaction history image exactly
@@ -50,37 +52,12 @@ const MyEarnings = ({ navigation }) => {
   return (
     <ScreenWrapper scrollable>
       <View style={styles.contentContainer}>
-        {/* Top Header Row Navigation */}
-        <View style={styles.navigationHeaderRow}>
-          <TouchableOpacity
-            onPress={() => navigation?.goBack()}
-            style={styles.backButtonTile}
-            activeOpacity={0.7}
-          >
-            <Image
-              source={AppImages.arrowLeft}
-              style={styles.backArrowIcon}
-              resizeMode="contain"
-            />
-            <Text style={styles.backActionLabelText}>Back</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Brand Core Identity Area */}
-        <View style={styles.brandHeroContainer}>
-          <View style={styles.avatarMainFrame}>
-            <Image source={AppImages.logo} style={styles.logo} />
-          </View>
-          <Text style={styles.subtextTag}>Vendors</Text>
-        </View>
-
-        {/* Screen Title & Description */}
-        <View style={styles.headlineContainer}>
-          <Text style={styles.mainHeadingTitle}>My Earnings 💵</Text>
-          <Text style={styles.subHeadingDescription}>
-            Track your income and withdrawals
-          </Text>
-        </View>
+        <LogoHeader
+          goBack
+          headerHeight={20}
+          title="My Earnings 💵"
+          description="Track your income and withdrawals"
+        />
 
         {/* STATS METRICS ROW */}
         <View style={styles.statsRowFrame}>
@@ -183,68 +160,68 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(2),
     minHeight: '95%',
   },
-  navigationHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: '100%',
-    marginTop: responsiveHeight(1),
-  },
-  backButtonTile: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backArrowIcon: {
-    height: 20,
-    width: 20,
-    tintColor: AppColors.black,
-    resizeMode: 'contain',
-    marginRight: responsiveWidth(2),
-  },
-  backActionLabelText: {
-    fontSize: responsiveFontSize(1.6),
-    color: AppColors.black,
-    fontWeight: '500',
-  },
-  brandHeroContainer: {
-    alignItems: 'center',
-    marginTop: -responsiveHeight(2),
-    marginBottom: responsiveHeight(1),
-  },
-  avatarMainFrame: {
-    width: responsiveWidth(20),
-    height: responsiveWidth(20),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    height: responsiveHeight(50),
-    width: responsiveWidth(50),
-    resizeMode: 'contain',
-  },
-  subtextTag: {
-    fontSize: responsiveFontSize(1.3),
-    fontWeight: '700',
-    color: AppColors.black,
-    marginTop: responsiveHeight(0.6),
-  },
-  headlineContainer: {
-    alignItems: 'center',
-    marginVertical: responsiveHeight(1),
-  },
-  mainHeadingTitle: {
-    fontSize: responsiveFontSize(2.4),
-    fontWeight: '700',
-    color: AppColors.black,
-    textAlign: 'center',
-  },
-  subHeadingDescription: {
-    fontSize: responsiveFontSize(1.6),
-    color: '#555555',
-    textAlign: 'center',
-    marginTop: responsiveHeight(0.6),
-  },
+  // navigationHeaderRow: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'flex-start',
+  //   width: '100%',
+  //   marginTop: responsiveHeight(1),
+  // },
+  // backButtonTile: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  // backArrowIcon: {
+  //   height: 20,
+  //   width: 20,
+  //   tintColor: AppColors.black,
+  //   resizeMode: 'contain',
+  //   marginRight: responsiveWidth(2),
+  // },
+  // backActionLabelText: {
+  //   fontSize: responsiveFontSize(1.6),
+  //   color: AppColors.black,
+  //   fontWeight: '500',
+  // },
+  // brandHeroContainer: {
+  //   alignItems: 'center',
+  //   marginTop: -responsiveHeight(2),
+  //   marginBottom: responsiveHeight(1),
+  // },
+  // avatarMainFrame: {
+  //   width: responsiveWidth(20),
+  //   height: responsiveWidth(20),
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
+  // logo: {
+  //   height: responsiveHeight(50),
+  //   width: responsiveWidth(50),
+  //   resizeMode: 'contain',
+  // },
+  // subtextTag: {
+  //   fontSize: responsiveFontSize(1.3),
+  //   fontWeight: '700',
+  //   color: AppColors.black,
+  //   marginTop: responsiveHeight(0.6),
+  // },
+  // headlineContainer: {
+  //   alignItems: 'center',
+  //   marginVertical: responsiveHeight(1),
+  // },
+  // mainHeadingTitle: {
+  //   fontSize: responsiveFontSize(2.4),
+  //   fontWeight: '700',
+  //   color: AppColors.black,
+  //   textAlign: 'center',
+  // },
+  // subHeadingDescription: {
+  //   fontSize: responsiveFontSize(1.6),
+  //   color: '#555555',
+  //   textAlign: 'center',
+  //   marginTop: responsiveHeight(0.6),
+  // },
   statsRowFrame: {
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   FlatList,
   ScrollView,
 } from 'react-native';
+import Text from '../../components/CustomText';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import {
   responsiveWidth,
@@ -16,6 +16,7 @@ import {
 } from '../../utils/Responsive_Dimensions';
 import { AppImages } from '../../assets/Images/Index';
 import { AppColors } from '../../utils/AppColors';
+import LogoHeader from '../../components/LogoHeader';
 
 const ServiceDetails = ({ navigation, route }) => {
   const { data } = route.params;
@@ -58,30 +59,7 @@ const ServiceDetails = ({ navigation, route }) => {
   return (
     <ScreenWrapper scrollable>
       <View style={styles.contentContainer}>
-        {/* Top Absolute Position Interactive Action Strip Bar */}
-        <View style={styles.navigationHeaderRow}>
-          <TouchableOpacity
-            onPress={() => navigation?.goBack()}
-            style={styles.backButtonTile}
-            activeOpacity={0.7}
-          >
-            <Image
-              source={AppImages.arrowLeft}
-              style={styles.backArrowIcon}
-              resizeMode="contain"
-            />
-            <Text style={styles.backActionLabelText}>Back</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Core App Header Logo Block Group */}
-        <View style={styles.brandHeroContainer}>
-          <View style={styles.avatarMainFrame}>
-            <Image source={AppImages.logo} style={styles.logo} />
-          </View>
-          <Text style={styles.subtextTag}>Vendors</Text>
-          <Text style={styles.welcomeTitle}>Service Details</Text>
-        </View>
+        <LogoHeader goBack title="Service Details" headerHeight={25} />
 
         {/* SECTION CARD ONE: Comprehensive Inner Details Module Container */}
         <View style={styles.mainDetailsBlueBorderCard}>

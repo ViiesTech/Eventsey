@@ -1,0 +1,25 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Arial-Bold.ttf",
+      "sha1": "03ea55d42903c041b1ff64c2bd593fb7b9d3a843"
+    },
+    {
+      "path": "src/assets/fonts/Arial-BoldItalic.ttf",
+      "sha1": "b40a612ab8031fcbce0361bd049cfd1f60477df0"
+    },
+    {
+      "path": "src/assets/fonts/Arial-Italic.ttf",
+      "sha1": "c04eaf9e6eb0b462049309bf670a49a4ed7e6725"
+    },
+    {
+      "path": "src/assets/fonts/Arial-Medium.ttf",
+      "sha1": "f500ce2af19b434fcca06e91ac27747155bf2f91"
+    },
+    {
+      "path": "src/assets/fonts/Arial-Regular.ttf",
+      "sha1": "66154062e9902d6664f9855bfc04138e8b0c7c53"
+    }
+  ]
+}

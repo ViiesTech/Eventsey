@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
@@ -10,6 +9,7 @@ import {
   Platform,
   Alert,
 } from 'react-native';
+import Text from '../../components/CustomText';
 import { launchImageLibrary } from 'react-native-image-picker'; // Image Picker Import
 import ScreenWrapper from '../../components/ScreenWrapper';
 import CustomDropdown from '../../components/CustomDropdown';
@@ -20,6 +20,7 @@ import {
 } from '../../utils/Responsive_Dimensions';
 import { AppImages } from '../../assets/Images/Index';
 import { AppColors } from '../../utils/AppColors';
+import LogoHeader from '../../components/LogoHeader';
 
 const AddService = ({ navigation }) => {
   // Information States
@@ -125,33 +126,12 @@ const AddService = ({ navigation }) => {
   return (
     <ScreenWrapper scrollable>
       <View style={styles.contentContainer}>
-        {/* Top Absolute Position Interactive Action Strip Bar */}
-        <View style={styles.navigationHeaderRow}>
-          <TouchableOpacity
-            onPress={() => navigation?.goBack()}
-            style={styles.backButtonTile}
-            activeOpacity={0.7}
-          >
-            <Image
-              source={AppImages.arrowLeft}
-              style={styles.backArrowIcon}
-              resizeMode="contain"
-            />
-            <Text style={styles.backActionLabelText}>Back</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Core App Header Logo Block Group */}
-        <View style={styles.brandHeroContainer}>
-          <View style={styles.avatarMainFrame}>
-            <Image source={AppImages.logo} style={styles.logo} />
-          </View>
-          <Text style={styles.subtextTag}>Vendors</Text>
-          <Text style={styles.welcomeTitle}>Add Service</Text>
-          <Text style={styles.statusDescriptionText}>
-            Create a new package for clients
-          </Text>
-        </View>
+        <LogoHeader
+          goBack
+          headerHeight={25}
+          title="Add Service"
+          description="Create a new package for clients"
+        />
 
         {/* SECTION CARD BLOCK ONE: Basic Core Information */}
         <View style={styles.formSectionModuleCardContainer}>
@@ -442,64 +422,6 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(2),
     marginBottom: responsiveHeight(2),
     minHeight: '95%',
-  },
-  navigationHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: '100%',
-    marginTop: responsiveHeight(1),
-  },
-  backButtonTile: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backArrowIcon: {
-    height: 20,
-    width: 20,
-    tintColor: AppColors.black,
-    resizeMode: 'contain',
-    marginRight: responsiveWidth(2),
-  },
-  backActionLabelText: {
-    fontSize: responsiveFontSize(1.6),
-    color: AppColors.black,
-    fontWeight: '500',
-  },
-  brandHeroContainer: {
-    alignItems: 'center',
-    marginTop: -responsiveHeight(2),
-    marginBottom: responsiveHeight(1),
-  },
-  avatarMainFrame: {
-    width: responsiveWidth(20),
-    height: responsiveWidth(20),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    height: responsiveHeight(50),
-    width: responsiveWidth(50),
-    resizeMode: 'contain',
-  },
-  subtextTag: {
-    fontSize: responsiveFontSize(1.3),
-    fontWeight: '700',
-    color: AppColors.black,
-    marginTop: responsiveHeight(0.6),
-  },
-  welcomeTitle: {
-    fontSize: responsiveFontSize(2.2),
-    color: AppColors.black,
-    fontWeight: '600',
-    marginTop: responsiveHeight(0.8),
-  },
-  statusDescriptionText: {
-    fontSize: responsiveFontSize(1.6),
-    color: '#4A4A4A',
-    fontWeight: '400',
-    marginTop: responsiveHeight(0.5),
   },
   formSectionModuleCardContainer: {
     backgroundColor: '#FFFFFF',

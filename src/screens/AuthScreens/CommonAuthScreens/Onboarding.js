@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, StyleSheet, Dimensions } from 'react-native';
+import Text from '../../../components/CustomText';
 import { useNavigation } from '@react-navigation/native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import ScreenWrapper from '../../../components/ScreenWrapper';

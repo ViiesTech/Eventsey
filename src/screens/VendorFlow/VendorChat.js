@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
@@ -10,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import Text from '../../components/CustomText';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import {
   responsiveWidth,
@@ -18,6 +18,7 @@ import {
 } from '../../utils/Responsive_Dimensions';
 import { AppImages } from '../../assets/Images/Index';
 import { AppColors } from '../../utils/AppColors';
+import LogoHeader from '../../components/LogoHeader';
 
 const VendorChat = ({ navigation, route }) => {
   const [typedMessage, setTypedMessage] = useState('');
@@ -126,112 +127,95 @@ const VendorChat = ({ navigation, route }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
     >
-      <ScreenWrapper style={styles.screenWrapperOverridingStyle}>
+      <ScreenWrapper>
         <View style={styles.contentContainer}>
-          <View style={styles.navigationHeaderRow}>
-            <TouchableOpacity
-              onPress={() => navigation?.goBack()}
-              style={styles.backButtonTile}
-              activeOpacity={0.7}
-            >
-              <Image
-                source={AppImages.arrowLeft}
-                style={styles.backArrowIcon}
-                resizeMode="contain"
-              />
-              <Text style={styles.backActionLabelText}>Back</Text>
-            </TouchableOpacity>
-          </View>
-          {/* Top Integrated Interactive Brand Identity Row Block */}
+          <LogoHeader goBack title="Messages" />
 
-          <View style={styles.brandHeroContainer}>
-            <View style={styles.avatarMainFrame}>
-              <Image source={AppImages.logo} style={styles.logo} />
+          <View style={{ flex: 1 }}>
+            {/* Persistent Dynamic Direct Active Entity Identity Header Label Segment */}
+            <View style={styles.clientIdentityTitleHeaderBox}>
+              <Text style={styles.clientHeaderNameText}>{clientName}</Text>
+              <View style={styles.horizontalDivisionBoundaryLineBreak} />
             </View>
-            <Text style={styles.subtextTag}>Vendors</Text>
-            <Text style={styles.welcomeTitle}>Messages</Text>
-          </View>
 
-          {/* Persistent Dynamic Direct Active Entity Identity Header Label Segment */}
-          <View style={styles.clientIdentityTitleHeaderBox}>
-            <Text style={styles.clientHeaderNameText}>{clientName}</Text>
-            <View style={styles.horizontalDivisionBoundaryLineBreak} />
-          </View>
-
-          {/* Scrollable Conversation Feed Node Area */}
-          <FlatList
-            ref={flatListRef}
-            data={messagesStream}
-            keyExtractor={item => item.id}
-            renderItem={renderMessageBubble}
-            contentContainerStyle={
-              styles.dialogueListContentScrollAreaContainer
-            }
-            showsVerticalScrollIndicator={false}
-            onContentSizeChange={() =>
-              flatListRef.current?.scrollToEnd({ animated: false })
-            }
-            ListFooterComponent={
-              /* Typing State Indicator Icon Wrapper Placeholder */
-              <View style={styles.clientTypingStateIndicatorWrapperRow}>
-                <View style={styles.typingIndicatorBubbleFrameCapsule}>
-                  <Text style={styles.typingIndicatorEllipsisGraphemeSpan}>
-                    •••
-                  </Text>
+            {/* Scrollable Conversation Feed Node Area */}
+            <FlatList
+              ref={flatListRef}
+              data={messagesStream}
+              keyExtractor={item => item.id}
+              renderItem={renderMessageBubble}
+              contentContainerStyle={
+                styles.dialogueListContentScrollAreaContainer
+              }
+              showsVerticalScrollIndicator={false}
+              onContentSizeChange={() =>
+                flatListRef.current?.scrollToEnd({ animated: false })
+              }
+              ListFooterComponent={
+                /* Typing State Indicator Icon Wrapper Placeholder */
+                <View style={styles.clientTypingStateIndicatorWrapperRow}>
+                  <View style={styles.typingIndicatorBubbleFrameCapsule}>
+                    <Text style={styles.typingIndicatorEllipsisGraphemeSpan}>
+                      •••
+                    </Text>
+                  </View>
                 </View>
+              }
+            />
+
+            {/* Action Input Bottom Command Panel Console Dock */}
+            <View style={styles.bottomControlBarConsoleRowWrapper}>
+              <View style={styles.mediaUtilityButtonsClusterGroup}>
+                <TouchableOpacity
+                  style={styles.circularFormAccessoryIconButton}
+                  activeOpacity={0.7}
+                >
+                  <Image
+                    source={AppImages.upload}
+                    style={styles.utilityMediaIcon}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.circularFormAccessoryIconButton}
+                  activeOpacity={0.7}
+                >
+                  <Image
+                    source={AppImages.smile}
+                    style={styles.utilityMediaIcon}
+                  />
+                </TouchableOpacity>
               </View>
-            }
-          />
 
-          {/* Action Input Bottom Command Panel Console Dock */}
-          <View style={styles.bottomControlBarConsoleRowWrapper}>
-            <View style={styles.mediaUtilityButtonsClusterGroup}>
-              <TouchableOpacity
-                style={styles.circularFormAccessoryIconButton}
-                activeOpacity={0.7}
-              >
-                <Image
-                  source={AppImages.upload}
-                  style={styles.utilityMediaIcon}
+              <View style={styles.inputTextFieldMasterWrapperBox}>
+                <TextInput
+                  style={styles.textInputConsoleFieldInstance}
+                  placeholder="Type a message..."
+                  placeholderTextColor="#9E9E9E"
+                  multiline
+                  value={typedMessage}
+                  onChangeText={setTypedMessage}
                 />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.circularFormAccessoryIconButton}
-                activeOpacity={0.7}
-              >
-                <Image
-                  source={AppImages.smile}
-                  style={styles.utilityMediaIcon}
-                />
-              </TouchableOpacity>
-            </View>
+              </View>
 
-            <View style={styles.inputTextFieldMasterWrapperBox}>
-              <TextInput
-                style={styles.textInputConsoleFieldInstance}
-                placeholder="Type a message..."
-                placeholderTextColor="#9E9E9E"
-                multiline
-                value={typedMessage}
-                onChangeText={setTypedMessage}
-              />
-            </View>
+              <View style={styles.rightSideInteractiveControlsGroup}>
+                <TouchableOpacity
+                  style={styles.circularFormAccessoryIconButton}
+                  activeOpacity={0.7}
+                >
+                  <Image
+                    source={AppImages.mic}
+                    style={styles.utilityMediaIcon}
+                  />
+                </TouchableOpacity>
 
-            <View style={styles.rightSideInteractiveControlsGroup}>
-              <TouchableOpacity
-                style={styles.circularFormAccessoryIconButton}
-                activeOpacity={0.7}
-              >
-                <Image source={AppImages.mic} style={styles.utilityMediaIcon} />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.brandActionButtonColorCapsuleTileButton}
-                activeOpacity={0.8}
-                onPress={handleSendMessage}
-              >
-                <Image source={AppImages.send} style={styles.sendIcon} />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.brandActionButtonColorCapsuleTileButton}
+                  activeOpacity={0.8}
+                  onPress={handleSendMessage}
+                >
+                  <Image source={AppImages.send} style={styles.sendIcon} />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
@@ -244,77 +228,16 @@ const styles = StyleSheet.create({
   keyboardViewportRootContainer: {
     flex: 1,
   },
-  screenWrapperOverridingStyle: {
-    flex: 1,
-  },
   contentContainer: {
-    backgroundColor: AppColors.white || '#FFFFFF',
-    marginHorizontal: responsiveWidth(6),
-    borderRadius: 36,
-    paddingHorizontal: responsiveWidth(5),
-    paddingTop: responsiveHeight(3),
-    paddingBottom:
-      Platform.OS === 'ios' ? responsiveHeight(2) : responsiveHeight(3),
-    marginTop: responsiveHeight(2),
-    marginBottom: responsiveHeight(2),
     flex: 1,
-    justifyContent: 'space-between',
-  },
-  navigationHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: responsiveHeight(1),
-    paddingRight: responsiveWidth(4),
-  },
-  backButtonTile: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backArrowIcon: {
-    height: 20,
-    width: 20,
-    tintColor: AppColors.black,
-    resizeMode: 'contain',
-    marginRight: responsiveWidth(2),
-  },
-  backActionLabelText: {
-    fontSize: responsiveFontSize(1.6),
-    color: AppColors.black,
-    fontWeight: '500',
-  },
-  brandHeroContainer: {
-    alignItems: 'center',
-    marginTop: -responsiveHeight(2),
-    marginBottom: responsiveHeight(1),
-  },
-  avatarMainFrame: {
-    width: responsiveWidth(20),
-    height: responsiveWidth(20),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    height: responsiveHeight(50),
-    width: responsiveWidth(50),
-    resizeMode: 'contain',
-  },
-  subtextTag: {
-    fontSize: responsiveFontSize(1.3),
-    fontWeight: '700',
-    color: AppColors.black,
-    marginTop: responsiveHeight(0.6),
-  },
-  welcomeTitle: {
-    fontSize: responsiveFontSize(2),
-    color: AppColors.black,
-    fontWeight: '500',
-    marginTop: responsiveHeight(0.8),
+    marginHorizontal: responsiveWidth(9),
+    paddingTop: responsiveHeight(3),
+    paddingBottom: responsiveHeight(1),
   },
   clientIdentityTitleHeaderBox: {
     alignItems: 'center',
-    marginTop: responsiveHeight(1.5),
     width: '100%',
+    marginTop: responsiveHeight(1.5),
   },
   clientHeaderNameText: {
     fontSize: responsiveFontSize(2.2),

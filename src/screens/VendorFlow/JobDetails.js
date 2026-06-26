@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import Text from '../../components/CustomText';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import {
   responsiveWidth,
@@ -8,6 +9,7 @@ import {
 } from '../../utils/Responsive_Dimensions';
 import { AppImages } from '../../assets/Images/Index';
 import { AppColors } from '../../utils/AppColors';
+import LogoHeader from '../../components/LogoHeader';
 
 const JobDetails = ({ navigation, route }) => {
   // Navigation handling back arrow utility
@@ -21,7 +23,7 @@ const JobDetails = ({ navigation, route }) => {
     <ScreenWrapper scrollable>
       <View style={styles.contentContainer}>
         {/* Top Header Controls with Persistent Brand Logo */}
-        <View style={styles.navigationHeaderRow}>
+        {/* <View style={styles.navigationHeaderRow}>
           <TouchableOpacity
             onPress={handleBackPress}
             style={styles.backButtonTile}
@@ -34,15 +36,22 @@ const JobDetails = ({ navigation, route }) => {
             />
             <Text style={styles.backActionLabelText}>Back</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         {/* Brand Anchor Display Frame */}
-        <View style={styles.brandHeroContainer}>
+        {/* <View style={styles.brandHeroContainer}>
           <View style={styles.avatarMainFrame}>
             <Image source={AppImages.logo} style={styles.logo} />
           </View>
           <Text style={styles.subtextTag}>Vendors</Text>
-        </View>
+        </View> */}
+
+        <LogoHeader
+          goBack
+
+          // title="Add Service"
+          // description="Create a new package for clients"
+        />
 
         {/* Category & Status Badge Row */}
         <View style={styles.titleStatusHeaderRow}>

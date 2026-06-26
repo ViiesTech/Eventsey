@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View, Image, Text } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
+import Text from '../../../components/CustomText';
 import { AppImages } from '../../../assets/Images/Index';
 import {
   responsiveFontSize,

@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import Text from './CustomText';
 import SvgXml from './SvgXml';
 import {
   responsiveFontSize,

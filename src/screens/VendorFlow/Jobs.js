@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   FlatList,
 } from 'react-native';
+import Text from '../../components/CustomText';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import JobCard from '../../components/JobCard';
 import {
@@ -16,6 +16,7 @@ import {
 } from '../../utils/Responsive_Dimensions';
 import { AppImages } from '../../assets/Images/Index';
 import { AppColors } from '../../utils/AppColors';
+import LogoHeader from '../../components/LogoHeader';
 
 const VendorJobs = ({ navigation }) => {
   // Screen active status dynamic selection track karne ke liye state
@@ -82,15 +83,11 @@ const VendorJobs = ({ navigation }) => {
   return (
     <ScreenWrapper scrollable>
       <View style={styles.contentContainer}>
-        {/* Main Top Header Section Identity Wrapper */}
-        <View style={styles.brandHeroContainer}>
-          <View style={styles.avatarMainFrame}>
-            <Image source={AppImages.logo} style={styles.logo} />
-          </View>
-          <Text style={styles.subtextTag}>Vendors</Text>
-          <Text style={styles.welcomeTitle}>Job Requests</Text>
-          <Text style={styles.statusDescriptionText}>Manage your bookings</Text>
-        </View>
+        <LogoHeader
+          title="Job Requests"
+          description="Manage your bookings"
+          headerHeight={21}
+        />
 
         {/* Segment Filter Selection Tabs Bar Component */}
         <View style={styles.segmentControlBarContainer}>
@@ -151,39 +148,6 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(2),
     marginBottom: responsiveHeight(2),
     minHeight: '95%',
-  },
-  brandHeroContainer: {
-    alignItems: 'center',
-    marginVertical: responsiveHeight(1),
-  },
-  avatarMainFrame: {
-    width: responsiveWidth(20),
-    height: responsiveWidth(20),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    height: responsiveHeight(50),
-    width: responsiveWidth(50),
-    resizeMode: 'contain',
-  },
-  subtextTag: {
-    fontSize: responsiveFontSize(1.3),
-    fontWeight: '700',
-    color: AppColors.black,
-    marginTop: responsiveHeight(0.6),
-  },
-  welcomeTitle: {
-    fontSize: responsiveFontSize(2),
-    color: AppColors.black,
-    fontWeight: '600',
-    marginTop: responsiveHeight(1.2),
-  },
-  statusDescriptionText: {
-    fontSize: responsiveFontSize(1.4),
-    color: AppColors.black,
-    marginTop: responsiveHeight(1.5),
-    alignSelf: 'flex-start',
   },
   segmentControlBarContainer: {
     flexDirection: 'row',
