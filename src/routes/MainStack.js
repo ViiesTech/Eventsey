@@ -9,13 +9,17 @@ import ServiceDetails from '../screens/VendorFlow/ServiceDetails';
 import VendorEditProfile from '../screens/VendorFlow/VendorEditProfile';
 import Premium from '../screens/VendorFlow/Premium';
 import MyEarnings from '../screens/VendorFlow/MyEarnings';
+import VendorDetails from '../screens/UserFlow/VendorDetails';
+import UserChat from '../screens/UserFlow/UserChat';
+import HiredVendors from '../screens/UserFlow/HiredVendors';
+import PaymentHistory from '../screens/UserFlow/PaymentHistory';
 
 const Stack = createStackNavigator();
 
 const MainStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="VendorFlow"
+      initialRouteName="UserFlow"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="UserFlow" component={UserBottomTab} />
@@ -27,6 +31,10 @@ const MainStack = () => {
       <Stack.Screen name="VendorEditProfile" component={VendorEditProfile} />
       <Stack.Screen name="Premium" component={Premium} />
       <Stack.Screen name="MyEarnings" component={MyEarnings} />
+      <Stack.Screen name="VendorDetails" component={VendorDetails} />
+      <Stack.Screen name="UserChat" component={UserChat} />
+      <Stack.Screen name="HiredVendors" component={HiredVendors} />
+      <Stack.Screen name="PaymentHistory" component={PaymentHistory} />
     </Stack.Navigator>
   );
 };

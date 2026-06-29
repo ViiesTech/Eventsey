@@ -17,10 +17,11 @@ const CustomDropdown = ({
   placeholder,
   search = false,
   searchPlaceholder = 'Search...',
+  dropdowBgColor = '#F5F6F8',
 }) => {
   return (
     <Dropdown
-      style={styles.dropdownFrameBox}
+      style={styles.dropdownFrameBox(dropdowBgColor)}
       placeholderStyle={styles.placeholderTextStyle}
       selectedTextStyle={styles.selectedTextStyle}
       inputSearchStyle={styles.inputSearchStyle}
@@ -45,13 +46,13 @@ const CustomDropdown = ({
 };
 
 const styles = StyleSheet.create({
-  dropdownFrameBox: {
-    backgroundColor: '#F5F6F8',
+  dropdownFrameBox: color => ({
+    backgroundColor: color,
     borderRadius: 12,
     height: responsiveHeight(5.5),
     paddingHorizontal: responsiveWidth(3.5),
     justifyContent: 'center',
-  },
+  }),
   placeholderTextStyle: {
     fontSize: responsiveFontSize(1.5),
     color: '#BDBDBD',

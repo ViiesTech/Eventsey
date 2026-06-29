@@ -1,301 +1,649 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+  TextInput,
+} from 'react-native';
 import Text from '../../components/CustomText';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import { AppColors } from '../../utils/AppColors';
 import {
   responsiveWidth,
   responsiveHeight,
   responsiveFontSize,
 } from '../../utils/Responsive_Dimensions';
+import { AppColors } from '../../utils/AppColors';
+import { AppImages } from '../../assets/Images/Index';
+import PaymentModal from '../../components/Modals/PaymentModal';
+import PaymentDetailsModal from '../../components/Modals/PaymentDetailsModal';
 
-const vendorCategories = ['All', 'Venues', 'Photography', 'Decor', 'Catering'];
-
-const mockVendors = [
-  {
-    id: 1,
-    name: 'Bella Vista Garden',
-    category: 'Venues',
-    rating: '4.9',
-    price: '$8,500',
-    location: 'Los Angeles, CA',
-  },
-  {
-    id: 2,
-    name: 'Eternal Frame Photo',
-    category: 'Photography',
-    rating: '4.8',
-    price: '$2,400',
-    location: 'Beverly Hills, CA',
-  },
-  {
-    id: 3,
-    name: 'Bloom & Petals Decor',
-    category: 'Decor',
-    rating: '4.7',
-    price: '$1,800',
-    location: 'Pasadena, CA',
-  },
-  {
-    id: 4,
-    name: 'Gourmet Banquet Catering',
-    category: 'Catering',
-    rating: '4.9',
-    price: '$45/person',
-    location: 'Santa Monica, CA',
-  },
-  {
-    id: 5,
-    name: 'Golden Hour Cinematography',
-    category: 'Photography',
-    rating: '5.0',
-    price: '$3,200',
-    location: 'Malibu, CA',
-  },
+// Added 'Venue' to maintain symmetry with mock dataset item id '6'
+const tabs = [
+  'All',
+  'Photography',
+  'Catering',
+  'Decoration',
+  'Makeup',
+  'Music',
+  'Venue',
 ];
 
-const UserVendors = () => {
-  const [selectedCategory, setSelectedCategory] = useState('All');
+const Vendors = ({ navigation }) => {
+  const [activeTab, setActiveTab] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredVendors = mockVendors.filter(vendor => {
-    const matchesCategory =
-      selectedCategory === 'All' || vendor.category === selectedCategory;
+  const [isVisible, setIsVisible] = useState(false);
+  const [isDetailsVisible, setIsDetailsVisible] = useState(false);
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [paymentNote, setPaymentNote] = useState('');
+  const [selectedVendor, setSelectedVendor] = useState(null);
+
+  const summary = {
+    hiredCount: 3,
+    totalPaid: '$12.5K',
+  };
+
+  const [vendorsData, setVendorsData] = useState([
+    {
+      id: '1',
+      name: 'Premium Event',
+      category: 'Photography',
+      rating: '4.9',
+      reviewsCount: '127 reviews',
+      location: 'Seattle, WA',
+      jobsCount: '85 jobs',
+      priceRange: '$800 - $1500',
+      isActive: true,
+      hasActionsBar: true,
+      categoryIcon: AppImages.camera,
+    },
+    {
+      id: '2',
+      name: 'Royal Cate',
+      category: 'Catering',
+      rating: '4.8',
+      reviewsCount: '203 reviews',
+      location: 'Seattle, WA',
+      jobsCount: '156 jobs',
+      priceRange: '$3000 - $5000',
+      isActive: true,
+      hasActionsBar: true,
+      categoryIcon: AppImages.catering,
+    },
+    {
+      id: '3',
+      name: 'Elegant Decor',
+      category: 'Decoration',
+      rating: '4.7',
+      reviewsCount: '89 reviews',
+      location: 'Bellevue, WA',
+      jobsCount: '62 jobs',
+      priceRange: '$2000 - $4000',
+      isActive: false,
+      hasActionsBar: false,
+      categoryIcon: AppImages.decoration,
+    },
+    {
+      id: '4',
+      name: 'Glamour Ma..',
+      category: 'Makeup',
+      rating: '4.9',
+      reviewsCount: '145 reviews',
+      location: 'Seattle, WA',
+      jobsCount: '198 jobs',
+      priceRange: '$300 - $600',
+      isActive: true,
+      hasActionsBar: true,
+      categoryIcon: AppImages.makeUp,
+    },
+    {
+      id: '5',
+      name: 'Sound & Beats..',
+      category: 'Music',
+      rating: '4.6',
+      reviewsCount: '78 reviews',
+      location: 'Seattle, WA',
+      jobsCount: '91 jobs',
+      priceRange: '$1000 - $2000',
+      isActive: false,
+      hasActionsBar: false,
+      categoryIcon: AppImages.music,
+    },
+    {
+      id: '6',
+      name: 'Perfect Venue Hal',
+      category: 'Venue',
+      rating: '4.7',
+      reviewsCount: '92 reviews',
+      location: 'Bellevue, WA',
+      jobsCount: '45 jobs',
+      priceRange: '$5000 - $8000',
+      isActive: false,
+      hasActionsBar: false,
+      categoryIcon: AppImages.venue,
+    },
+  ]);
+
+  const filteredVendors = vendorsData.filter(vendor => {
+    const matchesTab = activeTab === 'All' || vendor.category === activeTab;
     const matchesSearch = vendor.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return matchesTab && matchesSearch;
   });
 
-  return (
-    <ScreenWrapper scrollable backgroundColor={AppColors.white}>
-      <View style={styles.container}>
-        <Text style={styles.screenHeader}>Find Vendors</Text>
+  // Action helper to open the payment modal context
+  const handlePayPress = vendor => {
+    setSelectedVendor(vendor);
+    setPaymentAmount('');
+    setPaymentNote('');
+    setIsVisible(true);
+  };
 
-        {/* Search Input */}
-        <View style={styles.searchWrapper}>
-          <TextInput
-            placeholder="Search vendors, services..."
-            placeholderTextColor="#8E8E93"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            style={styles.searchInput}
-          />
+  const handleConfirmPayment = () => {
+    setIsVisible(false);
+    setIsDetailsVisible(true);
+  };
+
+  return (
+    <ScreenWrapper>
+      <View style={styles.mainInnerCanvasSheet}>
+        {/* Screen Header */}
+        <View style={styles.topBarHeaderFlexRow}>
+          <Text style={styles.screenMainHeadlineText}>Find Vendors</Text>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.paymentHistoryTriggerButton}
+            onPress={() => navigation.navigate('PaymentHistory')}
+          >
+            <Image source={AppImages.card} style={styles.cardIcon} />
+            <Text style={styles.paymentHistoryBtnLabelStringText}>
+              Payment History
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Categories Tab Row */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.categoryRow}
-          contentContainerStyle={styles.categoryRowContent}
-        >
-          {vendorCategories.map(category => {
-            const isSelected = selectedCategory === category;
-            return (
+        {/* Hired Metrics Dashboard Grid */}
+        <View style={styles.summaryKPIBlockWrapperFlexRow}>
+          <TouchableOpacity
+            style={styles.individualMetricDataBlockColumn}
+            onPress={() => navigation.navigate('HiredVendors')}
+          >
+            <Text style={styles.kpiDataValueMetricNumberText}>
+              {summary.hiredCount}
+            </Text>
+            <Text style={styles.kpiMetaLabelStringSubtext}>Hired Vendors</Text>
+          </TouchableOpacity>
+          <View style={styles.individualMetricDataBlockColumn}>
+            <Text style={styles.kpiDataValueMetricNumberText}>
+              {summary.totalPaid}
+            </Text>
+            <Text style={styles.kpiMetaLabelStringSubtext}>Total Paid</Text>
+          </View>
+        </View>
+
+        {/* Search Input Filter Component */}
+        <View style={styles.searchBarFormInteractionInlineRow}>
+          <View style={styles.searchBarInnerLayoutFieldWrapper}>
+            <Image
+              source={AppImages.search || { uri: 'search_fallback' }}
+              style={styles.searchInlineMagnifierIcon}
+            />
+            <TextInput
+              style={styles.searchTextInputElement}
+              placeholder="Search vendors..."
+              placeholderTextColor="#A4A4A4"
+              autoCapitalize="none"
+              autoCorrect={false}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+          </View>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.filterFunnelGlyphIconButtonTrigger}
+          >
+            <Image source={AppImages.filter} style={styles.filterIcon} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Horizontal Filters Track Segment */}
+        <View style={styles.horizontalFiltersScrollWrapperSection}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {tabs.map((tab, idx) => (
               <TouchableOpacity
-                key={category}
+                key={`${tab}-${idx}`}
+                activeOpacity={0.85}
                 style={[
-                  styles.categoryPill,
-                  isSelected && styles.categoryPillActive,
+                  styles.categoryContainer,
+                  activeTab === tab && styles.categoryContainerActive,
                 ]}
-                onPress={() => setSelectedCategory(category)}
+                onPress={() => setActiveTab(tab)}
               >
                 <Text
                   style={[
                     styles.categoryText,
-                    isSelected && styles.categoryTextActive,
+                    activeTab === tab && styles.categoryTextActive,
                   ]}
                 >
-                  {category}
+                  {tab}
                 </Text>
               </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+            ))}
+          </ScrollView>
+        </View>
 
-        {/* Vendors List */}
-        <View style={styles.vendorsList}>
-          {filteredVendors.length > 0 ? (
-            filteredVendors.map(vendor => (
-              <View key={vendor.id} style={styles.vendorCard}>
-                <View style={styles.vendorHeader}>
-                  <View style={styles.vendorNameBlock}>
-                    <Text style={styles.vendorName}>{vendor.name}</Text>
-                    <Text style={styles.vendorLocation}>{vendor.location}</Text>
-                  </View>
-                  <View style={styles.ratingBadge}>
-                    <Text style={styles.ratingStar}>★</Text>
-                    <Text style={styles.ratingText}>{vendor.rating}</Text>
-                  </View>
+        {/* Main Directory Feed */}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={
+            styles.directoryVerticalFeedScrollAreaContainer
+          }
+        >
+          {filteredVendors.map(vendor => (
+            <View
+              key={vendor.id}
+              style={styles.vendorCardItemCompositeBoxContainer}
+            >
+              <View style={styles.vendorCardUpperCoreIdentityFlexRow}>
+                {/* Fixed Overlap Reference Box Wrapper Container */}
+                <View style={styles.iconContainer}>
+                  <Image
+                    source={vendor.categoryIcon}
+                    style={styles.vendorCardCategoryIcon}
+                  />
                 </View>
 
-                <View style={styles.vendorDivider} />
-
-                <View style={styles.vendorFooter}>
-                  <View>
-                    <Text style={styles.priceLabel}>Starting from</Text>
-                    <Text style={styles.priceValue}>{vendor.price}</Text>
+                {/* Primary Meta Content Metadata */}
+                <View style={styles.cardColumn}>
+                  <View style={styles.titleRow}>
+                    <Text
+                      numberOfLines={1}
+                      style={styles.vendorBrandHeadingTitleStringText}
+                    >
+                      {vendor.name}
+                    </Text>
+                    {vendor.isActive && (
+                      <View style={styles.statusCapsule}>
+                        <Text style={styles.status}>Active</Text>
+                      </View>
+                    )}
                   </View>
-                  <TouchableOpacity style={styles.contactBtn}>
-                    <Text style={styles.contactBtnText}>Inquire</Text>
-                  </TouchableOpacity>
+
+                  {/* Feedback Stars Composite View */}
+                  <View
+                    style={styles.feedbackRatingStarsInlineCompositeFlexRow}
+                  >
+                    <Text style={styles.ratingStarGraphicGlyphSymbol}>★</Text>
+                    <Text style={styles.ratingNumericMetricScoreBodyText}>
+                      {vendor.rating}
+                    </Text>
+                    <Text
+                      style={styles.totalReviewsCounterVolumeMetaStringText}
+                    >
+                      ({vendor.reviewsCount})
+                    </Text>
+                  </View>
+
+                  {/* Regional Information Locations Track */}
+                  <View style={styles.locationRow}>
+                    <Image
+                      source={AppImages.location}
+                      style={styles.cardIcon}
+                    />
+                    <Text style={styles.geoMarkerLabelBodyStringText}>
+                      {vendor.location}
+                    </Text>
+                    <Image source={AppImages.jobs} style={styles.cardIcon} />
+                    <Text style={styles.jobsVolumeCounterLabelBodyStringText}>
+                      {vendor.jobsCount}
+                    </Text>
+                  </View>
+
+                  {/* Pricing Fields Row Parameter */}
+                  <Text style={styles.priceRange}>{vendor.priceRange}</Text>
                 </View>
               </View>
-            ))
-          ) : (
-            <Text style={styles.noVendorsText}>No vendors found</Text>
-          )}
-        </View>
+
+              {/* Functional Bottom Utility Shelf Action Elements */}
+              {vendor.hasActionsBar && (
+                <View style={styles.cardActionUtilityButtonsClusterRowShelf}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('VendorDetails', {
+                        data: vendor,
+                      })
+                    }
+                    activeOpacity={0.75}
+                    style={styles.viewActionControlBtnItem}
+                  >
+                    <Text style={styles.buttonText}>View</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    activeOpacity={0.75}
+                    style={styles.chatActionControlBtnItem}
+                    onPress={() =>
+                      navigation.navigate('UserChat', { thread: vendor })
+                    }
+                  >
+                    <Image source={AppImages.chat} style={styles.chatIcon} />
+                    <Text style={styles.buttonText}>Chat</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    activeOpacity={0.75}
+                    onPress={() => handlePayPress(vendor)}
+                    style={styles.payActionControlBtnItem}
+                  >
+                    <Image source={AppImages.card} style={styles.chatIcon} />
+                    <Text style={styles.buttonText}>Pay</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          ))}
+        </ScrollView>
       </View>
+
+      <PaymentModal
+        isVisible={isVisible}
+        onClose={() => setIsVisible(false)}
+        onConfirm={handleConfirmPayment}
+        vendorName={selectedVendor ? selectedVendor.name : ''}
+        amount={paymentAmount}
+        setAmount={setPaymentAmount}
+        note={paymentNote}
+        setNote={setPaymentNote}
+      />
+
+      <PaymentDetailsModal
+        isVisible={isDetailsVisible}
+        onClose={() => setIsDetailsVisible(false)}
+        onConfirm={() => {
+          setIsDetailsVisible(false);
+          navigation.navigate('HiredVendors');
+        }}
+        details={{
+          vendor: selectedVendor ? selectedVendor.name : 'Vendor',
+          service: selectedVendor ? selectedVendor.category : 'Service',
+          invoice: 'INV-003',
+          totalAmount: `$${paymentAmount || '0.00'}`,
+        }}
+      />
     </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  mainInnerCanvasSheet: {
     flex: 1,
-    paddingHorizontal: responsiveWidth(6),
-    paddingTop: responsiveHeight(2),
-    paddingBottom: responsiveHeight(12),
+    marginTop: responsiveHeight(2),
+    marginHorizontal: responsiveWidth(9), // Cleaned wide gutter structure layout bounds
+    paddingVertical: responsiveHeight(3.5),
   },
-  screenHeader: {
-    fontSize: responsiveFontSize(2.8),
-    fontWeight: '700',
-    color: AppColors.black,
-    marginBottom: responsiveHeight(2),
-  },
-  searchWrapper: {
-    backgroundColor: '#F5EFEA',
-    borderRadius: 14,
-    paddingHorizontal: responsiveWidth(4),
-    height: responsiveHeight(5.5),
-    justifyContent: 'center',
-    marginBottom: responsiveHeight(2.5),
-  },
-  searchInput: {
-    fontSize: responsiveFontSize(1.7),
-    color: AppColors.black,
-    padding: 0,
-  },
-  categoryRow: {
-    maxHeight: responsiveHeight(5),
+  topBarHeaderFlexRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: responsiveHeight(3),
   },
-  categoryRowContent: {
+  screenMainHeadlineText: {
+    fontSize: responsiveFontSize(3.4),
+    fontWeight: '800',
+    color: AppColors.black,
+  },
+  paymentHistoryTriggerButton: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: responsiveWidth(6),
-  },
-  categoryPill: {
-    paddingHorizontal: responsiveWidth(4.5),
-    paddingVertical: responsiveHeight(1),
+    backgroundColor: AppColors.black,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
-    marginRight: responsiveWidth(2),
+    paddingVertical: responsiveHeight(1),
+    paddingHorizontal: responsiveWidth(3.5),
   },
-  categoryPillActive: {
+  cardIcon: {
+    height: responsiveHeight(2),
+    width: responsiveWidth(4),
+    marginRight: responsiveWidth(1.5),
+    resizeMode: 'contain',
+  },
+  paymentHistoryBtnLabelStringText: {
+    color: AppColors.white,
+    fontSize: responsiveFontSize(1.4),
+    fontWeight: '600',
+  },
+  summaryKPIBlockWrapperFlexRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: responsiveHeight(3.5),
+  },
+  individualMetricDataBlockColumn: {
+    marginRight: responsiveWidth(12),
+  },
+  kpiDataValueMetricNumberText: {
+    fontSize: responsiveFontSize(3.6),
+    fontWeight: '700',
+    color: AppColors.black,
+    marginBottom: responsiveHeight(0.4),
+  },
+  kpiMetaLabelStringSubtext: {
+    fontSize: responsiveFontSize(1.6),
+    color: '#666666',
+    fontWeight: '500',
+  },
+  searchBarFormInteractionInlineRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: responsiveHeight(2.5),
+  },
+  searchBarInnerLayoutFieldWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F7F7F7',
+    borderRadius: 16,
+    flex: 1,
+    paddingHorizontal: responsiveWidth(4),
+    height: responsiveHeight(6.2),
+  },
+  searchInlineMagnifierIcon: {
+    width: responsiveWidth(4.5),
+    height: responsiveWidth(4.5),
+    tintColor: '#A4A4A4',
+    marginRight: responsiveWidth(2.5),
+  },
+  searchTextInputElement: {
+    flex: 1,
+    fontSize: responsiveFontSize(1.8),
+    color: AppColors.black,
+    fontWeight: '500',
+  },
+  filterFunnelGlyphIconButtonTrigger: {
+    marginLeft: responsiveWidth(3),
+    padding: responsiveWidth(2),
+  },
+  filterIcon: {
+    width: responsiveWidth(6),
+    height: responsiveWidth(6),
+    resizeMode: 'contain',
+  },
+  horizontalFiltersScrollWrapperSection: {
+    marginBottom: responsiveHeight(3),
+  },
+  categoryContainer: {
+    backgroundColor: '#F3F3F3',
+    borderRadius: 14,
+    paddingHorizontal: responsiveWidth(5),
+    paddingVertical: responsiveHeight(1.2),
+    marginRight: responsiveWidth(2.5),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  categoryContainerActive: {
     backgroundColor: AppColors.primary,
   },
   categoryText: {
     fontSize: responsiveFontSize(1.6),
+    color: '#555555',
     fontWeight: '600',
-    color: '#4A4A4A',
   },
   categoryTextActive: {
-    color: AppColors.white,
+    color: AppColors.black,
+    fontWeight: '700',
   },
-  vendorsList: {
-    width: '100%',
+  directoryVerticalFeedScrollAreaContainer: {
+    paddingBottom: responsiveHeight(5),
   },
-  vendorCard: {
+  vendorCardItemCompositeBoxContainer: {
     backgroundColor: AppColors.white,
+    borderRadius: 24,
     borderWidth: 1,
     borderColor: '#EFEFEF',
-    borderRadius: 20,
-    padding: responsiveWidth(5),
-    marginBottom: responsiveHeight(2),
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 6,
+    padding: responsiveWidth(4.5),
+    marginBottom: responsiveHeight(2.5),
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.02,
+    shadowRadius: 8,
     elevation: 2,
   },
-  vendorHeader: {
+  vendorCardUpperCoreIdentityFlexRow: {
+    flexDirection: 'row',
+  },
+  iconContainer: {
+    width: responsiveWidth(18),
+    height: responsiveWidth(18),
+    borderRadius: 16,
+    backgroundColor: '#F9F8F6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: responsiveWidth(4),
+  },
+  vendorCardCategoryIcon: {
+    height: responsiveWidth(10),
+    width: responsiveWidth(10),
+    resizeMode: 'contain',
+  },
+  cardColumn: {
+    flex: 1,
+  },
+  titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    marginBottom: responsiveHeight(0.4),
   },
-  vendorNameBlock: {
+  vendorBrandHeadingTitleStringText: {
+    fontSize: responsiveFontSize(2.1),
+    fontWeight: '700',
+    color: AppColors.black,
     flex: 1,
-    paddingRight: responsiveWidth(2),
+    marginRight: responsiveWidth(2),
   },
-  vendorName: {
-    fontSize: responsiveFontSize(2.0),
+  statusCapsule: {
+    backgroundColor: AppColors.secondary,
+    borderRadius: 10,
+    paddingHorizontal: responsiveWidth(2.5),
+    paddingVertical: responsiveHeight(0.3),
+  },
+  status: {
+    fontSize: responsiveFontSize(1.2),
     fontWeight: '700',
     color: AppColors.black,
   },
-  vendorLocation: {
-    fontSize: responsiveFontSize(1.5),
-    color: '#8E8E93',
-    marginTop: responsiveHeight(0.4),
-  },
-  ratingBadge: {
+  feedbackRatingStarsInlineCompositeFlexRow: {
     flexDirection: 'row',
-    backgroundColor: '#FFF9E6',
-    borderRadius: 8,
-    paddingHorizontal: responsiveWidth(2),
-    paddingVertical: responsiveHeight(0.5),
     alignItems: 'center',
+    marginBottom: responsiveHeight(0.6),
   },
-  ratingStar: {
-    color: '#FFB800',
+  ratingStarGraphicGlyphSymbol: {
+    color: '#FFC107',
     fontSize: responsiveFontSize(1.6),
     marginRight: responsiveWidth(1),
   },
-  ratingText: {
+  ratingNumericMetricScoreBodyText: {
     fontSize: responsiveFontSize(1.5),
     fontWeight: '700',
-    color: '#FFB800',
+    color: AppColors.black,
+    marginRight: responsiveWidth(1),
   },
-  vendorDivider: {
-    height: 1,
-    backgroundColor: '#EFEFEF',
-    marginVertical: responsiveHeight(1.8),
+  totalReviewsCounterVolumeMetaStringText: {
+    fontSize: responsiveFontSize(1.4),
+    color: AppColors.liteGray,
+    fontWeight: '400',
   },
-  vendorFooter: {
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: responsiveHeight(0.8),
+  },
+  geoMarkerLabelBodyStringText: {
+    fontSize: responsiveFontSize(1.4),
+    color: AppColors.liteGray,
+    fontWeight: '500',
+    marginRight: responsiveWidth(3),
+  },
+  jobsVolumeCounterLabelBodyStringText: {
+    fontSize: responsiveFontSize(1.4),
+    color: AppColors.liteGray,
+    fontWeight: '500',
+  },
+  priceRange: {
+    fontSize: responsiveFontSize(1.6),
+    fontWeight: '700',
+    color: AppColors.darkPink,
+  },
+  cardActionUtilityButtonsClusterRowShelf: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: responsiveHeight(2.2),
+    borderTopWidth: 1,
+    borderTopColor: '#FAFAFA',
+    paddingTop: responsiveHeight(1.8),
   },
-  priceLabel: {
-    fontSize: responsiveFontSize(1.4),
-    color: '#8E8E93',
+  viewActionControlBtnItem: {
+    flex: 1,
+    backgroundColor: '#86DDD4',
+    borderRadius: 12,
+    paddingVertical: responsiveHeight(1.3),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: responsiveWidth(2),
   },
-  priceValue: {
-    fontSize: responsiveFontSize(1.9),
-    fontWeight: '700',
+  chatActionControlBtnItem: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: AppColors.primary,
+    borderRadius: 12,
+    paddingVertical: responsiveHeight(1.3),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: responsiveWidth(2),
+  },
+  chatIcon: {
+    width: responsiveWidth(4),
+    height: responsiveWidth(4),
+    resizeMode: 'contain',
+    tintColor: AppColors.black,
+    marginRight: responsiveWidth(1),
+  },
+  buttonText: {
     color: AppColors.black,
-    marginTop: responsiveHeight(0.2),
+    fontSize: responsiveFontSize(1.5),
+    fontWeight: '500',
   },
-  contactBtn: {
-    backgroundColor: '#FDF7F5',
-    borderWidth: 1,
-    borderColor: AppColors.primary,
-    borderRadius: 10,
-    paddingHorizontal: responsiveWidth(4.5),
-    paddingVertical: responsiveHeight(1),
-  },
-  contactBtnText: {
-    color: AppColors.primary,
-    fontWeight: '600',
-    fontSize: responsiveFontSize(1.6),
-  },
-  noVendorsText: {
-    textAlign: 'center',
-    color: '#8E8E93',
-    fontSize: responsiveFontSize(1.7),
-    marginTop: responsiveHeight(5),
+  payActionControlBtnItem: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#F5F5F5',
+    borderRadius: 12,
+    paddingVertical: responsiveHeight(1.3),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
-export default UserVendors;
+export default Vendors;

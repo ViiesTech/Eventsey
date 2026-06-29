@@ -1,283 +1,843 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+  Modal,
+  TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Linking,
+  Alert,
+} from 'react-native';
 import Text from '../../components/CustomText';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import { AppColors } from '../../utils/AppColors';
 import {
   responsiveWidth,
   responsiveHeight,
   responsiveFontSize,
 } from '../../utils/Responsive_Dimensions';
+import { AppColors } from '../../utils/AppColors';
+import { AppImages } from '../../assets/Images/Index';
 
-const initialGuests = [
-  { id: 1, name: 'John Doe', status: 'Attending', relation: 'Groom Family' },
-  { id: 2, name: 'Sarah Smith', status: 'Attending', relation: 'Bride Friend' },
-  { id: 3, name: 'Alex Johnson', status: 'Pending', relation: 'Bride Family' },
-  { id: 4, name: 'David Lee', status: 'Declined', relation: 'Groom Friend' },
-  { id: 5, name: 'Emily Davis', status: 'Attending', relation: 'Groom Family' },
-  { id: 6, name: 'Michael Brown', status: 'Pending', relation: 'Bride Friend' },
-  {
-    id: 7,
-    name: 'Jessica Wilson',
-    status: 'Attending',
-    relation: 'Bride Family',
-  },
-];
+const Guests = ({ navigation }) => {
+  const [activeTab, setActiveTab] = useState('All');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editingGuestId, setEditingGuestId] = useState(null); // Tracks if we are editing or adding
 
-const UserGuests = () => {
-  const [guests, setGuests] = useState(initialGuests);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('All');
+  // Form input local states
+  const [fullName, setFullName] = useState('');
+  const [relation, setRelation] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
 
-  const attendingCount = guests.filter(g => g.status === 'Attending').length;
-  const pendingCount = guests.filter(g => g.status === 'Pending').length;
-  const declinedCount = guests.filter(g => g.status === 'Declined').length;
+  const [guestsData, setGuestsData] = useState([
+    {
+      id: '1',
+      name: 'Sarah Johnson',
+      relation: 'Friend',
+      phone: '+1234567890',
+      email: '',
+      status: 'Accepted',
+    },
+    {
+      id: '2',
+      name: 'Mike Anderson',
+      relation: 'Colleague',
+      phone: '',
+      email: 'mike@email.com',
+      status: 'Declined',
+    },
+    {
+      id: '3',
+      name: 'Emily Davis',
+      relation: 'Family',
+      phone: '+1234567891',
+      email: '',
+      status: 'Pending',
+    },
+    {
+      id: '4',
+      name: 'John Smith',
+      relation: 'Friend',
+      phone: '',
+      email: 'john@email.com',
+      status: 'Accepted',
+    },
+    {
+      id: '5',
+      name: 'Lisa Brown',
+      relation: 'Family',
+      phone: '+1234567892',
+      email: '',
+      status: 'Accepted',
+    },
+  ]);
 
-  const filteredGuests = guests.filter(guest => {
-    const matchesFilter =
-      activeFilter === 'All' || guest.status === activeFilter;
-    const matchesSearch = guest.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesFilter && matchesSearch;
+  // Dynamically calculate statistics cards from dataset state
+  const totalCount = guestsData.length;
+  const acceptedCount = guestsData.filter(g => g.status === 'Accepted').length;
+  const declinedCount = guestsData.filter(g => g.status === 'Declined').length;
+  const pendingCount = guestsData.filter(g => g.status === 'Pending').length;
+
+  const filteredGuests = guestsData.filter(guest => {
+    if (activeTab === 'All') return true;
+    return guest.status === activeTab;
   });
 
-  return (
-    <ScreenWrapper scrollable backgroundColor={AppColors.white}>
-      <View style={styles.container}>
-        <Text style={styles.screenHeader}>Guest Management</Text>
+  const getStatusColor = status => {
+    switch (status) {
+      case 'Accepted':
+        return 'rgba(0, 124, 0, 1)'; // Solid Green
+      case 'Declined':
+        return 'rgba(244, 62, 53, 1)'; // Solid Red
+      case 'Pending':
+        return 'rgba(247, 215, 32, 1)'; // Solid Yellow
+      default:
+        return 'rgba(113, 113, 130, 1)';
+    }
+  };
 
-        {/* RSVP Stats Grid */}
-        <View style={styles.statsCard}>
-          <Text style={styles.statsCardTitle}>RSVP Status Summary</Text>
-          <View style={styles.statsRow}>
-            <View style={[styles.statItem, { borderLeftColor: '#4CAF50' }]}>
-              <Text style={[styles.statNumber, { color: '#4CAF50' }]}>
-                {attendingCount}
-              </Text>
-              <Text style={styles.statLabel}>Attending</Text>
-            </View>
-            <View style={[styles.statItem, { borderLeftColor: '#FFC107' }]}>
-              <Text style={[styles.statNumber, { color: '#FFC107' }]}>
-                {pendingCount}
-              </Text>
-              <Text style={styles.statLabel}>Pending</Text>
-            </View>
-            <View style={[styles.statItem, { borderLeftColor: '#F44336' }]}>
-              <Text style={[styles.statNumber, { color: '#F44336' }]}>
-                {declinedCount}
-              </Text>
-              <Text style={styles.statLabel}>Declined</Text>
-            </View>
+  // Trigger Native SMS app using Linking
+  const handleMessagePress = phoneNumber => {
+    if (!phoneNumber) {
+      Alert.alert('Error', 'No phone number provided for this guest.');
+      return;
+    }
+    Linking.openURL(`sms:${phoneNumber}`).catch(() =>
+      Alert.alert('Error', 'Unable to open messaging app.'),
+    );
+  };
+
+  // Trigger Native Email client using Linking
+  const handleEmailPress = emailAddress => {
+    if (!emailAddress) {
+      Alert.alert('Error', 'No email address provided for this guest.');
+      return;
+    }
+    Linking.openURL(`mailto:${emailAddress}`).catch(() =>
+      Alert.alert('Error', 'Unable to open email app.'),
+    );
+  };
+
+  // Populate fields and open modal for Edit Mode
+  const handleEditPress = guest => {
+    setEditingGuestId(guest.id);
+    setFullName(guest.name);
+    setRelation(guest.relation);
+    setEmail(guest.email || '');
+    setPhone(guest.phone || '');
+    setModalVisible(true);
+  };
+
+  // Delete Guest function
+  const handleDeletePress = guestId => {
+    Alert.alert('Delete Guest', 'Are you sure you want to remove this guest?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => {
+          setGuestsData(prevData => prevData.filter(g => g.id !== guestId));
+        },
+      },
+    ]);
+  };
+
+  // Handles both Create and Update Operations
+  const handleAddOrUpdateGuest = () => {
+    if (!fullName.trim()) {
+      Alert.alert('Validation Error', 'Full Name is required.');
+      return;
+    }
+
+    if (editingGuestId) {
+      // Update existing guest record
+      setGuestsData(prevData =>
+        prevData.map(g =>
+          g.id === editingGuestId
+            ? {
+                ...g,
+                name: fullName,
+                relation: relation || 'Guest',
+                phone: phone,
+                email: email,
+              }
+            : g,
+        ),
+      );
+    } else {
+      // Create new guest record
+      const newGuest = {
+        id: Date.now().toString(),
+        name: fullName,
+        relation: relation || 'Guest',
+        phone: phone,
+        email: email,
+        status: 'Pending',
+      };
+      setGuestsData([newGuest, ...guestsData]);
+    }
+
+    closeModalAndReset();
+  };
+
+  const closeModalAndReset = () => {
+    setFullName('');
+    setRelation('');
+    setEmail('');
+    setPhone('');
+    setEditingGuestId(null);
+    setModalVisible(false);
+  };
+
+  return (
+    <ScreenWrapper>
+      <View style={styles.contentContainer}>
+        {/* Title Section */}
+        <View style={styles.titleBlockContainer}>
+          <Text style={styles.screenMainTitleText}>Guest Management</Text>
+          <Text style={styles.screenSubTitleText}>
+            Track RSVPs and invitations
+          </Text>
+        </View>
+
+        {/* Counter Dashboard Grid Cards */}
+        <View style={styles.counterDashboardRowLayout}>
+          <View style={styles.statCounterItemBlock}>
+            <Text
+              style={[styles.counterNumericMetric, { color: AppColors.blue }]}
+            >
+              {totalCount}
+            </Text>
+            <Text style={styles.counterMetaTitleLabel}>Total</Text>
+          </View>
+          <View style={styles.statCounterItemBlock}>
+            <Text
+              style={[styles.counterNumericMetric, { color: AppColors.green }]}
+            >
+              {acceptedCount}
+            </Text>
+            <Text style={styles.counterMetaTitleLabel}>Accepted</Text>
+          </View>
+          <View style={styles.statCounterItemBlock}>
+            <Text
+              style={[styles.counterNumericMetric, { color: AppColors.red }]}
+            >
+              {declinedCount}
+            </Text>
+            <Text style={styles.counterMetaTitleLabel}>Declined</Text>
+          </View>
+          <View style={styles.statCounterItemBlock}>
+            <Text
+              style={[styles.counterNumericMetric, { color: AppColors.yellow }]}
+            >
+              {pendingCount}
+            </Text>
+            <Text style={styles.counterMetaTitleLabel}>Pending</Text>
           </View>
         </View>
 
-        {/* Search */}
-        <View style={styles.searchWrapper}>
-          <TextInput
-            placeholder="Search guests by name..."
-            placeholderTextColor="#8E8E93"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            style={styles.searchInput}
-          />
+        {/* Custom Status Segmented Tab Controls Filter Bar */}
+        <View style={styles.segmentedTabWrapperBar}>
+          {['All', 'Accepted', 'Declined', 'Pending'].map(tab => (
+            <TouchableOpacity
+              key={tab}
+              activeOpacity={0.8}
+              style={[
+                styles.tabFilterButton,
+                activeTab === tab && styles.tabFilterButtonActive,
+              ]}
+              onPress={() => setActiveTab(tab)}
+            >
+              <Text
+                style={[
+                  styles.tabButtonLabelText,
+                  activeTab === tab && styles.tabButtonLabelTextActive,
+                ]}
+              >
+                {tab}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
-        {/* Filter Tabs */}
-        <View style={styles.filterTabs}>
-          {['All', 'Attending', 'Pending', 'Declined'].map(filter => {
-            const isActive = activeFilter === filter;
-            return (
-              <TouchableOpacity
-                key={filter}
-                style={[styles.filterTab, isActive && styles.filterTabActive]}
-                onPress={() => setActiveFilter(filter)}
-              >
-                <Text
+        {/* Scrollable Guest Directory Cards Feed */}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listScrollArea}
+        >
+          {filteredGuests.map(guest => (
+            <View key={guest.id} style={styles.guestCardItemRowContainer}>
+              {/* Profile Meta Frame Header Row */}
+              <View style={styles.guestInfoMetaHeaderRow}>
+                <View>
+                  <View style={styles.nameAndTrashActionAlignmentRow}>
+                    <Text style={styles.guestProfileMainNameText}>
+                      {guest.name}
+                    </Text>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      style={styles.trashActionIconTrigger}
+                      onPress={() => handleDeletePress(guest.id)}
+                    >
+                      <Image source={AppImages.delete} style={styles.delete} />
+                    </TouchableOpacity>
+                  </View>
+
+                  <Text style={styles.relationshipSubLabelMetaText}>
+                    {guest.relation}
+                  </Text>
+                </View>
+
+                {/* Status Pills Badges Layout */}
+                <View
                   style={[
-                    styles.filterTabText,
-                    isActive && styles.filterTabTextActive,
+                    styles.statusCapsuleBadgeWrapper,
+                    { backgroundColor: getStatusColor(guest.status) },
                   ]}
                 >
-                  {filter}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-
-        {/* Guest List */}
-        <View style={styles.guestList}>
-          {filteredGuests.length > 0 ? (
-            filteredGuests.map(guest => {
-              let statusBg = '#E8F5E9';
-              let statusText = '#2E7D32';
-
-              if (guest.status === 'Pending') {
-                statusBg = '#FFFDE7';
-                statusText = '#F57F17';
-              } else if (guest.status === 'Declined') {
-                statusBg = '#FFEBEE';
-                statusText = '#C62828';
-              }
-
-              return (
-                <View key={guest.id} style={styles.guestCard}>
-                  <View style={styles.guestDetails}>
-                    <Text style={styles.guestName}>{guest.name}</Text>
-                    <Text style={styles.guestRelation}>{guest.relation}</Text>
-                  </View>
-                  <View
-                    style={[styles.statusBadge, { backgroundColor: statusBg }]}
+                  <Text
+                    style={[
+                      styles.statusCapsuleBadgeText,
+                      guest.status === 'Pending' && { color: '#000000' },
+                    ]}
                   >
-                    <Text
-                      style={[styles.statusBadgeText, { color: statusText }]}
-                    >
-                      {guest.status}
-                    </Text>
-                  </View>
+                    {guest.status}
+                  </Text>
                 </View>
-              );
-            })
-          ) : (
-            <Text style={styles.noGuestsText}>
-              No guests match the criteria
-            </Text>
-          )}
-        </View>
+              </View>
+
+              {/* Direct Details Contact Row */}
+              {guest.phone ? (
+                <View style={styles.communicationDetailEntryInlineRow}>
+                  <View style={styles.phoneIcon}>
+                    <Image source={AppImages.phone} style={styles.phoneIcon} />
+                  </View>
+                  <Text style={styles.communicationDetailStringBodyText}>
+                    {guest.phone}
+                  </Text>
+                </View>
+              ) : (
+                <View style={styles.communicationDetailEntryInlineRow}>
+                  <View style={styles.phoneIcon}>
+                    <Image source={AppImages.email} style={styles.phoneIcon} />
+                  </View>
+                  <Text style={styles.communicationDetailStringBodyText}>
+                    {guest.email}
+                  </Text>
+                </View>
+              )}
+
+              {/* Action Buttons Interface Utility Bar */}
+              <View style={styles.cardActionUtilityButtonsClusterRow}>
+                <TouchableOpacity
+                  activeOpacity={0.75}
+                  style={styles.messageActionTriggerButtonInstance}
+                  onPress={() => handleMessagePress(guest.phone)}
+                >
+                  <Image
+                    source={AppImages.message}
+                    style={styles.messageIcon}
+                  />
+                  <Text style={styles.messageActionTriggerButtonLabelText}>
+                    Message
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  activeOpacity={0.75}
+                  style={styles.emailActionTriggerButtonInstance}
+                  onPress={() => handleEmailPress(guest.email)}
+                >
+                  <Image source={AppImages.email} style={styles.emailIcon} />
+                  <Text style={styles.emailActionTriggerButtonLabelText}>
+                    Email
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.editActionTriggerButtonInstance}
+                  onPress={() => handleEditPress(guest)}
+                >
+                  <Text style={styles.editActionTriggerButtonLabelText}>
+                    Edit
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
+        </ScrollView>
+
+        {/* Add Floating Action Button */}
+        <TouchableOpacity
+          activeOpacity={0.85}
+          style={styles.floatingActionButtonCapsule}
+          onPress={() => {
+            setEditingGuestId(null); // Ensure add mode explicitly
+            setModalVisible(true);
+          }}
+        >
+          <Text style={styles.fabPlusSymbolSignIcon}>+</Text>
+        </TouchableOpacity>
+
+        {/* Add / Edit Guest Overlay Modal */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={closeModalAndReset}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.modalDimmedOverlayBackground}>
+              <View style={styles.modalCardFormWindowContainer}>
+                {/* Dynamic Title based on context */}
+                <Text style={styles.modalContentTitleText}>
+                  {editingGuestId ? 'Edit Guest' : 'Add Guest'}
+                </Text>
+
+                {/* Form Input Fields */}
+                <TextInput
+                  style={styles.formTextInputFieldInstance}
+                  placeholder="Full Name"
+                  placeholderTextColor="#A0A0A0"
+                  value={fullName}
+                  onChangeText={setFullName}
+                />
+
+                <TextInput
+                  style={styles.formTextInputFieldInstance}
+                  placeholder="Relation"
+                  placeholderTextColor="#A0A0A0"
+                  value={relation}
+                  onChangeText={setRelation}
+                />
+
+                <TextInput
+                  style={styles.formTextInputFieldInstance}
+                  placeholder="Email"
+                  placeholderTextColor="#A0A0A0"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={email}
+                  onChangeText={setEmail}
+                />
+
+                <TextInput
+                  style={styles.formTextInputFieldInstance}
+                  placeholder="Phone"
+                  placeholderTextColor="#A0A0A0"
+                  keyboardType="phone-pad"
+                  value={phone}
+                  onChangeText={setPhone}
+                />
+
+                {!editingGuestId && (
+                  <>
+                    {/* Custom Or Splitter Element - Only display while adding */}
+                    <View style={styles.dividerOrWrapperLayoutRow}>
+                      <View style={styles.dividerHorizontalLineSegment} />
+                      <Text style={styles.orLabelMiddleTextText}>or</Text>
+                      <View style={styles.dividerHorizontalLineSegment} />
+                    </View>
+
+                    {/* CSV/Excel Import Section */}
+                    <View
+                      style={styles.csvExcelFileImportDottedBoxFrameContainer}
+                    >
+                      <Text style={styles.excelSpreadsheetGlyphGraphemeIcon}>
+                        📊
+                      </Text>
+                      <Text style={styles.importCaptionPromptPayloadLabelText}>
+                        Import CSV / Excel
+                      </Text>
+                    </View>
+                  </>
+                )}
+
+                {/* Bottom Trigger Action Buttons */}
+                <View style={styles.modalActionTriggerButtonsLayoutRow}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.modalSecondaryCancelTriggerBtn}
+                    onPress={closeModalAndReset}
+                  >
+                    <Text style={styles.modalSecondaryCancelLabelText}>
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.modalPrimarySubmitTriggerBtn}
+                    onPress={handleAddOrUpdateGuest}
+                  >
+                    <Text style={styles.modalPrimarySubmitLabelText}>
+                      {editingGuestId ? 'Save Changes' : 'Add Guest'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
       </View>
     </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  contentContainer: {
     flex: 1,
-    paddingHorizontal: responsiveWidth(6),
-    paddingTop: responsiveHeight(2),
-    paddingBottom: responsiveHeight(12),
+    backgroundColor: AppColors.white,
+    marginHorizontal: responsiveWidth(5),
+    borderRadius: 36,
+    paddingHorizontal: responsiveWidth(5),
+    paddingTop: responsiveHeight(4),
+    position: 'relative',
   },
-  screenHeader: {
-    fontSize: responsiveFontSize(2.8),
-    fontWeight: '700',
-    color: AppColors.black,
+  titleBlockContainer: {
     marginBottom: responsiveHeight(2.5),
   },
-  statsCard: {
-    backgroundColor: '#FDF7F5',
-    borderWidth: 1,
-    borderColor: '#FBE8E2',
-    borderRadius: 20,
-    padding: responsiveWidth(5),
-    marginBottom: responsiveHeight(3),
-  },
-  statsCardTitle: {
-    fontSize: responsiveFontSize(1.8),
-    fontWeight: '700',
-    color: '#8A6861',
-    marginBottom: responsiveHeight(1.5),
-    textAlign: 'center',
-  },
-  statsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  statItem: {
-    borderLeftWidth: 3,
-    paddingLeft: responsiveWidth(3),
-    alignItems: 'flex-start',
-  },
-  statNumber: {
-    fontSize: responsiveFontSize(2.4),
+  screenMainTitleText: {
+    fontSize: responsiveFontSize(3.2),
     fontWeight: '800',
+    color: AppColors.black,
   },
-  statLabel: {
+  screenSubTitleText: {
+    fontSize: responsiveFontSize(1.9),
+    color: '#555555',
+    fontWeight: '400',
+    marginTop: responsiveHeight(0.5),
+  },
+  counterDashboardRowLayout: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: AppColors.white,
+    borderRadius: 18,
+    paddingVertical: responsiveHeight(1.6),
+    paddingHorizontal: responsiveWidth(3),
+    borderWidth: 1,
+    borderColor: '#F0F0F0',
+    marginBottom: responsiveHeight(2.5),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.02,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  statCounterItemBlock: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  counterNumericMetric: {
+    fontSize: responsiveFontSize(2.6),
+    fontWeight: '700',
+    marginBottom: responsiveHeight(0.4),
+  },
+  counterMetaTitleLabel: {
     fontSize: responsiveFontSize(1.4),
-    color: '#8E8E93',
+    color: '#888888',
     fontWeight: '500',
   },
-  searchWrapper: {
-    backgroundColor: '#F5EFEA',
-    borderRadius: 14,
-    paddingHorizontal: responsiveWidth(4),
-    height: responsiveHeight(5.5),
-    justifyContent: 'center',
-    marginBottom: responsiveHeight(2),
-  },
-  searchInput: {
-    fontSize: responsiveFontSize(1.7),
-    color: AppColors.black,
-    padding: 0,
-  },
-  filterTabs: {
+  segmentedTabWrapperBar: {
     flexDirection: 'row',
+    backgroundColor: '#F5F5F5',
+    borderRadius: 14,
+    padding: responsiveWidth(1),
     justifyContent: 'space-between',
     marginBottom: responsiveHeight(2.5),
   },
-  filterTab: {
-    paddingVertical: responsiveHeight(0.8),
-    paddingHorizontal: responsiveWidth(3.5),
-    borderRadius: 12,
-    backgroundColor: '#F5F5F5',
+  tabFilterButton: {
+    flex: 1,
+    paddingVertical: responsiveHeight(1.1),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 11,
   },
-  filterTabActive: {
+  tabFilterButtonActive: {
     backgroundColor: AppColors.primary,
   },
-  filterTabText: {
+  tabButtonLabelText: {
     fontSize: responsiveFontSize(1.5),
     fontWeight: '600',
-    color: '#4A4A4A',
+    color: '#666666',
   },
-  filterTabTextActive: {
+  tabButtonLabelTextActive: {
+    color: AppColors.black,
+  },
+  listScrollArea: {
+    paddingBottom: responsiveHeight(22),
+  },
+  guestCardItemRowContainer: {
+    backgroundColor: AppColors.white,
+    borderRadius: 20,
+    padding: responsiveWidth(4.5),
+    borderWidth: 1,
+    borderColor: '#F5F5F5',
+    marginBottom: responsiveHeight(2),
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.03,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  guestInfoMetaHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: responsiveHeight(1.2),
+  },
+  nameAndTrashActionAlignmentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  guestProfileMainNameText: {
+    fontSize: responsiveFontSize(2.1),
+    fontWeight: '700',
+    color: AppColors.black,
+  },
+  trashActionIconTrigger: {
+    marginLeft: responsiveWidth(2),
+    padding: 2,
+  },
+  delete: {
+    height: responsiveWidth(4),
+    width: responsiveWidth(4),
+    resizeMode: 'contain',
+    tintColor: AppColors.red,
+  },
+  relationshipSubLabelMetaText: {
+    fontSize: responsiveFontSize(1.5),
+    color: '#999999',
+    fontWeight: '400',
+    marginTop: responsiveHeight(0.2),
+  },
+  statusCapsuleBadgeWrapper: {
+    paddingHorizontal: responsiveWidth(3.5),
+    paddingVertical: responsiveHeight(0.5),
+    borderRadius: 12,
+    minWidth: responsiveWidth(22),
+    alignItems: 'center',
+  },
+  statusCapsuleBadgeText: {
+    fontSize: responsiveFontSize(1.35),
     color: AppColors.white,
+    fontWeight: '700',
   },
-  guestList: {
-    width: '100%',
+  communicationDetailEntryInlineRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: responsiveHeight(1.8),
+    paddingLeft: responsiveWidth(0.5),
   },
-  guestCard: {
+  phoneIcon: {
+    height: responsiveWidth(4),
+    width: responsiveWidth(4),
+    resizeMode: 'contain',
+    tintColor: AppColors.secondary,
+    marginRight: responsiveWidth(2),
+  },
+  communicationDetailStringBodyText: {
+    fontSize: responsiveFontSize(1.6),
+    color: '#444444',
+    fontWeight: '500',
+  },
+  cardActionUtilityButtonsClusterRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: AppColors.white,
-    borderWidth: 1,
-    borderColor: '#EFEFEF',
-    borderRadius: 16,
-    padding: responsiveWidth(4.5),
-    marginBottom: responsiveHeight(1.5),
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.02,
-    shadowRadius: 4,
-    elevation: 1,
   },
-  guestDetails: {
-    flex: 1,
+  messageActionTriggerButtonInstance: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: AppColors.black,
+    borderRadius: 10,
+    paddingVertical: responsiveHeight(1.2),
+    paddingHorizontal: responsiveWidth(4),
+    flex: 1.2,
+    marginRight: responsiveWidth(2),
   },
-  guestName: {
-    fontSize: responsiveFontSize(1.8),
-    fontWeight: '600',
+  messageActionTriggerButtonLabelText: {
+    color: AppColors.white,
+    fontSize: responsiveFontSize(1.5),
+    fontWeight: '400',
+  },
+  messageIcon: {
+    height: responsiveWidth(4),
+    width: responsiveWidth(4),
+    resizeMode: 'contain',
+    tintColor: AppColors.white,
+    marginRight: responsiveWidth(2),
+  },
+  emailActionTriggerButtonInstance: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: AppColors.primary,
+    borderRadius: 10,
+    paddingVertical: responsiveHeight(1.2),
+    paddingHorizontal: responsiveWidth(4),
+    flex: 1.2,
+    marginRight: responsiveWidth(2),
+  },
+  emailActionTriggerButtonLabelText: {
     color: AppColors.black,
+    fontSize: responsiveFontSize(1.5),
+    fontWeight: '400',
   },
-  guestRelation: {
-    fontSize: responsiveFontSize(1.4),
-    color: '#8E8E93',
-    marginTop: responsiveHeight(0.4),
+  emailIcon: {
+    height: responsiveWidth(4),
+    width: responsiveWidth(4),
+    resizeMode: 'contain',
+    tintColor: AppColors.black,
+    marginRight: responsiveWidth(2),
   },
-  statusBadge: {
-    paddingHorizontal: responsiveWidth(3),
-    paddingVertical: responsiveHeight(0.5),
-    borderRadius: 8,
+  editActionTriggerButtonInstance: {
+    backgroundColor: '#F0F0F0',
+    borderRadius: 10,
+    paddingVertical: responsiveHeight(1.2),
+    paddingHorizontal: responsiveWidth(3.5),
+    flex: 0.7,
+    alignItems: 'center',
   },
-  statusBadgeText: {
-    fontSize: responsiveFontSize(1.4),
+  editActionTriggerButtonLabelText: {
+    color: '#555555',
+    fontSize: responsiveFontSize(1.5),
+    fontWeight: '600',
+  },
+  floatingActionButtonCapsule: {
+    position: 'absolute',
+    bottom: responsiveHeight(11.5),
+    right: responsiveWidth(5),
+    backgroundColor: AppColors.primary,
+    width: responsiveWidth(14),
+    height: responsiveWidth(14),
+    borderRadius: responsiveWidth(7),
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999,
+    shadowColor: AppColors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  fabPlusSymbolSignIcon: {
+    fontSize: responsiveFontSize(3.2),
+    color: AppColors.black,
+    fontWeight: '400',
+    marginTop: -2,
+  },
+
+  /* ================= FORM MODAL STYLES ================= */
+  modalDimmedOverlayBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: responsiveWidth(6),
+  },
+  modalCardFormWindowContainer: {
+    backgroundColor: AppColors.white,
+    width: '100%',
+    borderRadius: 24,
+    padding: responsiveWidth(6),
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.12,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  modalContentTitleText: {
+    fontSize: responsiveFontSize(2.4),
+    fontWeight: '800',
+    color: AppColors.black,
+    marginBottom: responsiveHeight(2.2),
+    alignSelf: 'flex-start',
+  },
+  formTextInputFieldInstance: {
+    backgroundColor: '#F9F9F9',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#EEEEEE',
+    paddingHorizontal: responsiveWidth(4),
+    paddingVertical: responsiveHeight(1.4),
+    fontSize: responsiveFontSize(1.7),
+    color: AppColors.black,
+    marginBottom: responsiveHeight(1.5),
+  },
+  dividerOrWrapperLayoutRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: responsiveHeight(0.6),
+  },
+  dividerHorizontalLineSegment: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#EAEAEA',
+  },
+  orLabelMiddleTextText: {
+    fontSize: responsiveFontSize(1.5),
+    color: '#A0A0A0',
+    marginHorizontal: responsiveWidth(3),
+    fontWeight: '400',
+  },
+  csvExcelFileImportDottedBoxFrameContainer: {
+    borderWidth: 1.5,
+    borderColor: '#CCCDC2',
+    borderStyle: 'dashed',
+    borderRadius: 14,
+    backgroundColor: '#FAFAFA',
+    paddingVertical: responsiveHeight(2.2),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: responsiveHeight(2.8),
+  },
+  excelSpreadsheetGlyphGraphemeIcon: {
+    fontSize: responsiveFontSize(2.6),
+    marginBottom: responsiveHeight(0.5),
+  },
+  importCaptionPromptPayloadLabelText: {
+    fontSize: responsiveFontSize(1.5),
+    color: '#777777',
+    fontWeight: '600',
+  },
+  modalActionTriggerButtonsLayoutRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  modalSecondaryCancelTriggerBtn: {
+    backgroundColor: 'rgba(244, 239, 233, 1)',
+    borderRadius: 12,
+    paddingVertical: responsiveHeight(1.5),
+    flex: 1,
+    alignItems: 'center',
+    marginRight: responsiveWidth(3),
+  },
+  modalSecondaryCancelLabelText: {
+    color: AppColors.black,
+    fontSize: responsiveFontSize(1.7),
     fontWeight: '700',
   },
-  noGuestsText: {
-    textAlign: 'center',
-    color: '#8E8E93',
+  modalPrimarySubmitTriggerBtn: {
+    backgroundColor: AppColors.secondary,
+    borderRadius: 12,
+    paddingVertical: responsiveHeight(1.5),
+    flex: 1,
+    alignItems: 'center',
+  },
+  modalPrimarySubmitLabelText: {
+    color: AppColors.white,
     fontSize: responsiveFontSize(1.7),
-    marginTop: responsiveHeight(4),
+    fontWeight: '700',
   },
 });
 
-export default UserGuests;
+export default Guests;
