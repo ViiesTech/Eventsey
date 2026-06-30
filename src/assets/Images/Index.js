@@ -62,4 +62,10 @@ export const AppImages = {
   venue: require('./venue.png'),
   filter: require('./filter.png'),
   card: require('./card.png'),
+  question: require('./question.png'),
+  shield: require('./shield.png'),
+  doc: require('./doc.png'),
+  heartOutline: require('./heartOutline.png'),
+  arrowDown: require('./arrowDown.png'),
+  visit: require('./visit.png'),
 };

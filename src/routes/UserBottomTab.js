@@ -22,7 +22,7 @@ const UserBottomTab = () => {
         headerShown: false,
         tabBarShowLabel: true,
         tabBarActiveTintColor: AppColors.primary,
-        tabBarInactiveTintColor: AppColors.darkGray,
+        tabBarInactiveTintColor: AppColors.liteGray,
         tabBarLabelStyle: {
           fontSize: responsiveFontSize(1.5),
           fontWeight: '600',

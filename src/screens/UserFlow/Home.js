@@ -108,7 +108,11 @@ const UserHome = ({ navigation }) => {
           <TouchableOpacity activeOpacity={0.7} style={styles.headerIconCircle}>
             <Image source={AppImages.heart} style={styles.topHeaderIcon} />
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.7} style={styles.headerIconCircle}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Profile')}
+            activeOpacity={0.7}
+            style={styles.headerIconCircle}
+          >
             <Image source={AppImages.settings} style={styles.topHeaderIcon} />
           </TouchableOpacity>
         </View>

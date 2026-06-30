@@ -13,6 +13,10 @@ import VendorDetails from '../screens/UserFlow/VendorDetails';
 import UserChat from '../screens/UserFlow/UserChat';
 import HiredVendors from '../screens/UserFlow/HiredVendors';
 import PaymentHistory from '../screens/UserFlow/PaymentHistory';
+import UserEditProfile from '../screens/UserFlow/UserEditProfile';
+import HelpAndSupport from '../screens/UserFlow/HelpAndSupport';
+import TermsOfService from '../screens/UserFlow/TermsOfService';
+import PrivacyPolicy from '../screens/UserFlow/PrivacyPolicy';
 
 const Stack = createStackNavigator();
 
@@ -35,6 +39,10 @@ const MainStack = () => {
       <Stack.Screen name="UserChat" component={UserChat} />
       <Stack.Screen name="HiredVendors" component={HiredVendors} />
       <Stack.Screen name="PaymentHistory" component={PaymentHistory} />
+      <Stack.Screen name="UserEditProfile" component={UserEditProfile} />
+      <Stack.Screen name="HelpAndSupport" component={HelpAndSupport} />
+      <Stack.Screen name="TermsOfService" component={TermsOfService} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
     </Stack.Navigator>
   );
 };
