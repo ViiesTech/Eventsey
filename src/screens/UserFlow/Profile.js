@@ -142,12 +142,14 @@ const UserProfile = ({ navigation }) => {
           <View style={styles.settingsGroupCardWrapper}>
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => console.log('Trigger Delete Flow')}
+              onPress={() =>
+                navigation.replace('AuthStack', { screen: 'Splash' })
+              }
               style={[styles.settingRowItem, styles.noBottomBorder]}
             >
               <View style={styles.leftInfoBlock}>
                 <Image
-                  source={AppImages.delete}
+                  source={AppImages.logout}
                   style={[styles.rowIconGlyph, { tintColor: '#8B2635' }]}
                 />
                 <Text
@@ -156,7 +158,7 @@ const UserProfile = ({ navigation }) => {
                     { color: '#8B2635', fontWeight: '500' },
                   ]}
                 >
-                  Delete Wedding
+                  Log out
                 </Text>
               </View>
               <Image source={AppImages.arrowRight} style={styles.chevronIcon} />

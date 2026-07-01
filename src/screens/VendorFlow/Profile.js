@@ -239,7 +239,7 @@ const VendorProfile = ({ navigation }) => {
           {/* Option Node: Account Closure Destruction Subsystem De-authenticator Trigger */}
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('AuthStack', { screen: 'Splash' })
+              navigation.replace('AuthStack', { screen: 'Splash' })
             }
             style={[
               styles.settingsNavigationStandardHyperlinkRowTile,
