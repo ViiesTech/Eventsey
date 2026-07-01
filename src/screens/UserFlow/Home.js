@@ -26,7 +26,7 @@ const UserHome = ({ navigation }) => {
       badgeColor: AppColors.secondary,
       badgeTextColor: AppColors.black,
       icon: AppImages.plus,
-      route: 'PostJob',
+      route: 'MyJobs',
     },
     {
       id: '2',
@@ -56,7 +56,7 @@ const UserHome = ({ navigation }) => {
       badgeColor: AppColors.secondary,
       badgeTextColor: AppColors.black,
       icon: AppImages.tasks, // Replace with to-do icon if available
-      route: 'ToDoList',
+      route: 'Tasks',
     },
     {
       id: '5',
@@ -96,7 +96,7 @@ const UserHome = ({ navigation }) => {
       badgeColor: AppColors.secondary,
       badgeTextColor: AppColors.black,
       icon: AppImages.chat,
-      route: 'Chat',
+      route: 'UserMessages',
     },
   ];
 
@@ -149,7 +149,7 @@ const UserHome = ({ navigation }) => {
               key={item.id}
               style={styles.gridItemCard}
               activeOpacity={0.8}
-              // onPress={() => navigation.navigate(item.route)}
+              onPress={() => navigation.navigate(item.route)}
             >
               <View style={styles.menuIconBadgeWrapper}>
                 <Image source={item.icon} style={styles.menuItemIcon} />
@@ -233,7 +233,10 @@ const UserHome = ({ navigation }) => {
         {/* Your Vendors Section */}
         <View style={styles.sectionHeaderFlexContainer}>
           <Text style={styles.blockSectionHeadingInline}>Your Vendors</Text>
-          <TouchableOpacity activeOpacity={0.7}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('HiredVendors')}
+            activeOpacity={0.7}
+          >
             <Text style={styles.viewAllActionLabelLink}>View All</Text>
           </TouchableOpacity>
         </View>

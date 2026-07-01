@@ -129,7 +129,7 @@ const UserChat = ({ navigation, route }) => {
     >
       <ScreenWrapper>
         <View style={styles.contentContainer}>
-          <LogoHeader goBack title="Messages" />
+          <LogoHeader goBack title="Messages" user />
 
           <View style={{ flex: 1 }}>
             {/* Persistent Dynamic Direct Active Entity Identity Header Label Segment */}
@@ -231,13 +231,12 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     marginHorizontal: responsiveWidth(9),
-    paddingTop: responsiveHeight(3),
+    paddingTop: responsiveHeight(4),
     paddingBottom: responsiveHeight(1),
   },
   clientIdentityTitleHeaderBox: {
     alignItems: 'center',
     width: '100%',
-    marginTop: responsiveHeight(1.5),
   },
   clientHeaderNameText: {
     fontSize: responsiveFontSize(2.2),

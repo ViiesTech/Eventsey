@@ -18,6 +18,7 @@ import { AppImages } from '../../assets/Images/Index';
 
 const VendorDetails = ({ navigation, route }) => {
   const data = route.params?.data || {};
+  const userFlow = route.params?.type === 'user';
 
   // Data structural schema synchronized with asset-level parameters
   const vendorProfile = {
@@ -214,34 +215,38 @@ const VendorDetails = ({ navigation, route }) => {
           </TouchableOpacity>
 
           {/* Secondary communication links button layouts wrapper bar */}
-          <View style={styles.communicationTriggersFlexRowActionContainer}>
-            <TouchableOpacity
-              activeOpacity={0.75}
-              style={styles.communicationActionControlBtnItem}
-              onPress={() => navigation.navigate('UserChat', { thread: data })}
-            >
-              <Image
-                source={AppImages.chat}
-                style={styles.bottomBarActionAssetIcon}
-              />
-              <Text style={styles.communicationActionControlBtnItemLabelText}>
-                Message
-              </Text>
-            </TouchableOpacity>
+          {!userFlow && (
+            <View style={styles.communicationTriggersFlexRowActionContainer}>
+              <TouchableOpacity
+                activeOpacity={0.75}
+                style={styles.communicationActionControlBtnItem}
+                onPress={() =>
+                  navigation.navigate('UserChat', { thread: data })
+                }
+              >
+                <Image
+                  source={AppImages.chat}
+                  style={styles.bottomBarActionAssetIcon}
+                />
+                <Text style={styles.communicationActionControlBtnItemLabelText}>
+                  Message
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              activeOpacity={0.75}
-              style={styles.communicationActionControlBtnItem}
-            >
-              <Image
-                source={AppImages.phone}
-                style={styles.bottomBarActionAssetIcon}
-              />
-              <Text style={styles.communicationActionControlBtnItemLabelText}>
-                Call
-              </Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                activeOpacity={0.75}
+                style={styles.communicationActionControlBtnItem}
+              >
+                <Image
+                  source={AppImages.phone}
+                  style={styles.bottomBarActionAssetIcon}
+                />
+                <Text style={styles.communicationActionControlBtnItemLabelText}>
+                  Call
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
     </ScreenWrapper>

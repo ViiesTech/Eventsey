@@ -17,6 +17,7 @@ const LogoHeader = ({
   starImage = false,
   profileIcon = false,
   headerHeight = 17,
+  user = false,
 }) => {
   const navigation = useNavigation();
   let showNavigation = goBack || profileIcon;
@@ -64,7 +65,7 @@ const LogoHeader = ({
         <View style={styles.avatarMainFrame}>
           <Image source={AppImages.logo} style={styles.logo} />
         </View>
-        <Text style={styles.subtextTag}>Vendors</Text>
+        {!user && <Text style={styles.subtextTag}>Vendors</Text>}
       </View>
 
       {/* Screen Title & Description */}

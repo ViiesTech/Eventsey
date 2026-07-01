@@ -17,6 +17,12 @@ import UserEditProfile from '../screens/UserFlow/UserEditProfile';
 import HelpAndSupport from '../screens/UserFlow/HelpAndSupport';
 import TermsOfService from '../screens/UserFlow/TermsOfService';
 import PrivacyPolicy from '../screens/UserFlow/PrivacyPolicy';
+import Budget from '../screens/UserFlow/Budget';
+import UserMessages from '../screens/UserFlow/UserMessages';
+import Tickets from '../screens/UserFlow/Tickets';
+import MyJobs from '../screens/UserFlow/MyJobs';
+import PostJob from '../screens/UserFlow/PostJob';
+import UserJobDetails from '../screens/UserFlow/UserJobDetails';
 
 const Stack = createStackNavigator();
 
@@ -43,6 +49,12 @@ const MainStack = () => {
       <Stack.Screen name="HelpAndSupport" component={HelpAndSupport} />
       <Stack.Screen name="TermsOfService" component={TermsOfService} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+      <Stack.Screen name="Budget" component={Budget} />
+      <Stack.Screen name="UserMessages" component={UserMessages} />
+      <Stack.Screen name="Tickets" component={Tickets} />
+      <Stack.Screen name="MyJobs" component={MyJobs} />
+      <Stack.Screen name="PostJob" component={PostJob} />
+      <Stack.Screen name="UserJobDetails" component={UserJobDetails} />
     </Stack.Navigator>
   );
 };

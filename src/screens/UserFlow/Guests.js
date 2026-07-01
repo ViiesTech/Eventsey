@@ -5,15 +5,12 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  Modal,
-  TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
   Linking,
   Alert,
 } from 'react-native';
 import Text from '../../components/CustomText';
 import ScreenWrapper from '../../components/ScreenWrapper';
+import AddGuestModal from '../../components/Modals/AddGuestModal';
 import {
   responsiveWidth,
   responsiveHeight,
@@ -21,17 +18,12 @@ import {
 } from '../../utils/Responsive_Dimensions';
 import { AppColors } from '../../utils/AppColors';
 import { AppImages } from '../../assets/Images/Index';
+import { showToast } from '../../components/Toast';
 
 const Guests = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('All');
   const [modalVisible, setModalVisible] = useState(false);
-  const [editingGuestId, setEditingGuestId] = useState(null); // Tracks if we are editing or adding
-
-  // Form input local states
-  const [fullName, setFullName] = useState('');
-  const [relation, setRelation] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [selectedGuestForEdit, setSelectedGuestForEdit] = useState(null); // Pass object or null if adding
 
   const [guestsData, setGuestsData] = useState([
     {
@@ -76,7 +68,6 @@ const Guests = ({ navigation }) => {
     },
   ]);
 
-  // Dynamically calculate statistics cards from dataset state
   const totalCount = guestsData.length;
   const acceptedCount = guestsData.filter(g => g.status === 'Accepted').length;
   const declinedCount = guestsData.filter(g => g.status === 'Declined').length;
@@ -90,49 +81,41 @@ const Guests = ({ navigation }) => {
   const getStatusColor = status => {
     switch (status) {
       case 'Accepted':
-        return 'rgba(0, 124, 0, 1)'; // Solid Green
+        return 'rgba(0, 124, 0, 1)';
       case 'Declined':
-        return 'rgba(244, 62, 53, 1)'; // Solid Red
+        return 'rgba(244, 62, 53, 1)';
       case 'Pending':
-        return 'rgba(247, 215, 32, 1)'; // Solid Yellow
+        return 'rgba(247, 215, 32, 1)';
       default:
         return 'rgba(113, 113, 130, 1)';
     }
   };
 
-  // Trigger Native SMS app using Linking
   const handleMessagePress = phoneNumber => {
     if (!phoneNumber) {
-      Alert.alert('Error', 'No phone number provided for this guest.');
+      showToast('Error', 'No phone number provided for this guest.');
       return;
     }
     Linking.openURL(`sms:${phoneNumber}`).catch(() =>
-      Alert.alert('Error', 'Unable to open messaging app.'),
+      showToast('Error', 'Unable to open messaging app.'),
     );
   };
 
-  // Trigger Native Email client using Linking
   const handleEmailPress = emailAddress => {
     if (!emailAddress) {
-      Alert.alert('Error', 'No email address provided for this guest.');
+      showToast('Error', 'No email address provided for this guest.');
       return;
     }
     Linking.openURL(`mailto:${emailAddress}`).catch(() =>
-      Alert.alert('Error', 'Unable to open email app.'),
+      showToast('Error', 'Unable to open email app.'),
     );
   };
 
-  // Populate fields and open modal for Edit Mode
   const handleEditPress = guest => {
-    setEditingGuestId(guest.id);
-    setFullName(guest.name);
-    setRelation(guest.relation);
-    setEmail(guest.email || '');
-    setPhone(guest.phone || '');
+    setSelectedGuestForEdit(guest);
     setModalVisible(true);
   };
 
-  // Delete Guest function
   const handleDeletePress = guestId => {
     Alert.alert('Delete Guest', 'Are you sure you want to remove this guest?', [
       { text: 'Cancel', style: 'cancel' },
@@ -146,51 +129,36 @@ const Guests = ({ navigation }) => {
     ]);
   };
 
-  // Handles both Create and Update Operations
-  const handleAddOrUpdateGuest = () => {
-    if (!fullName.trim()) {
-      Alert.alert('Validation Error', 'Full Name is required.');
-      return;
-    }
-
-    if (editingGuestId) {
-      // Update existing guest record
+  // Central save callback interface for handling both creation and mutations updates
+  const handleSaveGuestData = formData => {
+    if (selectedGuestForEdit) {
+      // Edit Mode execution flow
       setGuestsData(prevData =>
         prevData.map(g =>
-          g.id === editingGuestId
+          g.id === selectedGuestForEdit.id
             ? {
                 ...g,
-                name: fullName,
-                relation: relation || 'Guest',
-                phone: phone,
-                email: email,
+                name: formData.name,
+                relation: formData.relation,
+                phone: formData.phone,
+                email: formData.email,
               }
             : g,
         ),
       );
     } else {
-      // Create new guest record
+      // Add Mode execution flow
       const newGuest = {
         id: Date.now().toString(),
-        name: fullName,
-        relation: relation || 'Guest',
-        phone: phone,
-        email: email,
+        name: formData.name,
+        relation: formData.relation,
+        phone: formData.phone,
+        email: formData.email,
         status: 'Pending',
       };
       setGuestsData([newGuest, ...guestsData]);
     }
-
-    closeModalAndReset();
-  };
-
-  const closeModalAndReset = () => {
-    setFullName('');
-    setRelation('');
-    setEmail('');
-    setPhone('');
-    setEditingGuestId(null);
-    setModalVisible(false);
+    setSelectedGuestForEdit(null);
   };
 
   return (
@@ -271,7 +239,6 @@ const Guests = ({ navigation }) => {
         >
           {filteredGuests.map(guest => (
             <View key={guest.id} style={styles.guestCardItemRowContainer}>
-              {/* Profile Meta Frame Header Row */}
               <View style={styles.guestInfoMetaHeaderRow}>
                 <View>
                   <View style={styles.nameAndTrashActionAlignmentRow}>
@@ -286,13 +253,11 @@ const Guests = ({ navigation }) => {
                       <Image source={AppImages.delete} style={styles.delete} />
                     </TouchableOpacity>
                   </View>
-
                   <Text style={styles.relationshipSubLabelMetaText}>
                     {guest.relation}
                   </Text>
                 </View>
 
-                {/* Status Pills Badges Layout */}
                 <View
                   style={[
                     styles.statusCapsuleBadgeWrapper,
@@ -310,28 +275,22 @@ const Guests = ({ navigation }) => {
                 </View>
               </View>
 
-              {/* Direct Details Contact Row */}
               {guest.phone ? (
                 <View style={styles.communicationDetailEntryInlineRow}>
-                  <View style={styles.phoneIcon}>
-                    <Image source={AppImages.phone} style={styles.phoneIcon} />
-                  </View>
+                  <Image source={AppImages.phone} style={styles.phoneIcon} />
                   <Text style={styles.communicationDetailStringBodyText}>
                     {guest.phone}
                   </Text>
                 </View>
               ) : (
                 <View style={styles.communicationDetailEntryInlineRow}>
-                  <View style={styles.phoneIcon}>
-                    <Image source={AppImages.email} style={styles.phoneIcon} />
-                  </View>
+                  <Image source={AppImages.email} style={styles.phoneIcon} />
                   <Text style={styles.communicationDetailStringBodyText}>
                     {guest.email}
                   </Text>
                 </View>
               )}
 
-              {/* Action Buttons Interface Utility Bar */}
               <View style={styles.cardActionUtilityButtonsClusterRow}>
                 <TouchableOpacity
                   activeOpacity={0.75}
@@ -377,113 +336,23 @@ const Guests = ({ navigation }) => {
           activeOpacity={0.85}
           style={styles.floatingActionButtonCapsule}
           onPress={() => {
-            setEditingGuestId(null); // Ensure add mode explicitly
+            setSelectedGuestForEdit(null); // Add flow explicit confirmation
             setModalVisible(true);
           }}
         >
           <Text style={styles.fabPlusSymbolSignIcon}>+</Text>
         </TouchableOpacity>
 
-        {/* Add / Edit Guest Overlay Modal */}
-        <Modal
-          animationType="fade"
-          transparent={true}
+        {/* External Overlay Modularized Add / Edit Controller Instance */}
+        <AddGuestModal
           visible={modalVisible}
-          onRequestClose={closeModalAndReset}
-        >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.modalDimmedOverlayBackground}>
-              <View style={styles.modalCardFormWindowContainer}>
-                {/* Dynamic Title based on context */}
-                <Text style={styles.modalContentTitleText}>
-                  {editingGuestId ? 'Edit Guest' : 'Add Guest'}
-                </Text>
-
-                {/* Form Input Fields */}
-                <TextInput
-                  style={styles.formTextInputFieldInstance}
-                  placeholder="Full Name"
-                  placeholderTextColor="#A0A0A0"
-                  value={fullName}
-                  onChangeText={setFullName}
-                />
-
-                <TextInput
-                  style={styles.formTextInputFieldInstance}
-                  placeholder="Relation"
-                  placeholderTextColor="#A0A0A0"
-                  value={relation}
-                  onChangeText={setRelation}
-                />
-
-                <TextInput
-                  style={styles.formTextInputFieldInstance}
-                  placeholder="Email"
-                  placeholderTextColor="#A0A0A0"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  value={email}
-                  onChangeText={setEmail}
-                />
-
-                <TextInput
-                  style={styles.formTextInputFieldInstance}
-                  placeholder="Phone"
-                  placeholderTextColor="#A0A0A0"
-                  keyboardType="phone-pad"
-                  value={phone}
-                  onChangeText={setPhone}
-                />
-
-                {!editingGuestId && (
-                  <>
-                    {/* Custom Or Splitter Element - Only display while adding */}
-                    <View style={styles.dividerOrWrapperLayoutRow}>
-                      <View style={styles.dividerHorizontalLineSegment} />
-                      <Text style={styles.orLabelMiddleTextText}>or</Text>
-                      <View style={styles.dividerHorizontalLineSegment} />
-                    </View>
-
-                    {/* CSV/Excel Import Section */}
-                    <View
-                      style={styles.csvExcelFileImportDottedBoxFrameContainer}
-                    >
-                      <Text style={styles.excelSpreadsheetGlyphGraphemeIcon}>
-                        📊
-                      </Text>
-                      <Text style={styles.importCaptionPromptPayloadLabelText}>
-                        Import CSV / Excel
-                      </Text>
-                    </View>
-                  </>
-                )}
-
-                {/* Bottom Trigger Action Buttons */}
-                <View style={styles.modalActionTriggerButtonsLayoutRow}>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    style={styles.modalSecondaryCancelTriggerBtn}
-                    onPress={closeModalAndReset}
-                  >
-                    <Text style={styles.modalSecondaryCancelLabelText}>
-                      Cancel
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    style={styles.modalPrimarySubmitTriggerBtn}
-                    onPress={handleAddOrUpdateGuest}
-                  >
-                    <Text style={styles.modalPrimarySubmitLabelText}>
-                      {editingGuestId ? 'Save Changes' : 'Add Guest'}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
+          onClose={() => {
+            setModalVisible(false);
+            setSelectedGuestForEdit(null);
+          }}
+          onSave={handleSaveGuestData}
+          editingGuest={selectedGuestForEdit}
+        />
       </View>
     </ScreenWrapper>
   );
@@ -732,111 +601,6 @@ const styles = StyleSheet.create({
     color: AppColors.black,
     fontWeight: '400',
     marginTop: -2,
-  },
-
-  /* ================= FORM MODAL STYLES ================= */
-  modalDimmedOverlayBackground: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: responsiveWidth(6),
-  },
-  modalCardFormWindowContainer: {
-    backgroundColor: AppColors.white,
-    width: '100%',
-    borderRadius: 24,
-    padding: responsiveWidth(6),
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.12,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-  modalContentTitleText: {
-    fontSize: responsiveFontSize(2.4),
-    fontWeight: '800',
-    color: AppColors.black,
-    marginBottom: responsiveHeight(2.2),
-    alignSelf: 'flex-start',
-  },
-  formTextInputFieldInstance: {
-    backgroundColor: '#F9F9F9',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#EEEEEE',
-    paddingHorizontal: responsiveWidth(4),
-    paddingVertical: responsiveHeight(1.4),
-    fontSize: responsiveFontSize(1.7),
-    color: AppColors.black,
-    marginBottom: responsiveHeight(1.5),
-  },
-  dividerOrWrapperLayoutRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: responsiveHeight(0.6),
-  },
-  dividerHorizontalLineSegment: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#EAEAEA',
-  },
-  orLabelMiddleTextText: {
-    fontSize: responsiveFontSize(1.5),
-    color: '#A0A0A0',
-    marginHorizontal: responsiveWidth(3),
-    fontWeight: '400',
-  },
-  csvExcelFileImportDottedBoxFrameContainer: {
-    borderWidth: 1.5,
-    borderColor: '#CCCDC2',
-    borderStyle: 'dashed',
-    borderRadius: 14,
-    backgroundColor: '#FAFAFA',
-    paddingVertical: responsiveHeight(2.2),
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: responsiveHeight(2.8),
-  },
-  excelSpreadsheetGlyphGraphemeIcon: {
-    fontSize: responsiveFontSize(2.6),
-    marginBottom: responsiveHeight(0.5),
-  },
-  importCaptionPromptPayloadLabelText: {
-    fontSize: responsiveFontSize(1.5),
-    color: '#777777',
-    fontWeight: '600',
-  },
-  modalActionTriggerButtonsLayoutRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  modalSecondaryCancelTriggerBtn: {
-    backgroundColor: 'rgba(244, 239, 233, 1)',
-    borderRadius: 12,
-    paddingVertical: responsiveHeight(1.5),
-    flex: 1,
-    alignItems: 'center',
-    marginRight: responsiveWidth(3),
-  },
-  modalSecondaryCancelLabelText: {
-    color: AppColors.black,
-    fontSize: responsiveFontSize(1.7),
-    fontWeight: '700',
-  },
-  modalPrimarySubmitTriggerBtn: {
-    backgroundColor: AppColors.secondary,
-    borderRadius: 12,
-    paddingVertical: responsiveHeight(1.5),
-    flex: 1,
-    alignItems: 'center',
-  },
-  modalPrimarySubmitLabelText: {
-    color: AppColors.white,
-    fontSize: responsiveFontSize(1.7),
-    fontWeight: '700',
   },
 });
 

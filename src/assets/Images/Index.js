@@ -68,4 +68,8 @@ export const AppImages = {
   heartOutline: require('./heartOutline.png'),
   arrowDown: require('./arrowDown.png'),
   visit: require('./visit.png'),
+  xl: require('./xl.png'),
+  share: require('./share.png'),
+  eye: require('./eye.png'),
+  car: require('./car.png'),
 };
