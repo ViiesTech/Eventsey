@@ -23,6 +23,10 @@ import Tickets from '../screens/UserFlow/Tickets';
 import MyJobs from '../screens/UserFlow/MyJobs';
 import PostJob from '../screens/UserFlow/PostJob';
 import UserJobDetails from '../screens/UserFlow/UserJobDetails';
+import Events from '../screens/UserFlow/Events';
+import CreateEvent from '../screens/UserFlow/CreateEvent';
+import PreviewCard from '../screens/UserFlow/PreviewCard';
+import Gallery from '../screens/UserFlow/Gallery';
 
 const Stack = createStackNavigator();
 
@@ -55,6 +59,10 @@ const MainStack = () => {
       <Stack.Screen name="MyJobs" component={MyJobs} />
       <Stack.Screen name="PostJob" component={PostJob} />
       <Stack.Screen name="UserJobDetails" component={UserJobDetails} />
+      <Stack.Screen name="Events" component={Events} />
+      <Stack.Screen name="CreateEvent" component={CreateEvent} />
+      <Stack.Screen name="PreviewCard" component={PreviewCard} />
+      <Stack.Screen name="Gallery" component={Gallery} />
     </Stack.Navigator>
   );
 };

@@ -243,7 +243,7 @@ const UserHome = ({ navigation }) => {
 
         <View style={styles.listCardItemContainerRow}>
           <View style={styles.iconAccentContainer}>
-            <Image source={AppImages.logo} style={styles.listCardRowIcon} />
+            <Image source={AppImages.users} style={styles.listCardRowIcon} />
           </View>
           <View style={styles.listCardContentColumn}>
             <Text style={styles.listCardTitleMainText}>2 Active Vendors</Text>
